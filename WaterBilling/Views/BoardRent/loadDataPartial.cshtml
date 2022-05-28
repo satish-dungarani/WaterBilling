@@ -1,0 +1,79 @@
+﻿@model List<WaterBilling.Models.BoardRentMasterModel>
+
+@{
+    Layout = "";
+}
+
+@using (Ajax.BeginForm("Save", "BoardRent", new AjaxOptions { HttpMethod = "POST", OnBegin = "", OnSuccess = "loadPartialData", OnFailure = "MessagePrintOnFailed" }))
+{
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box box-primary">
+
+                <div class="box-body">
+
+                    <table class="table table-bordered table-hover" id="tblMaster">
+                        <thead>
+                            <tr>
+                                <th>Effective Date</th>
+                                <th>Meter Type</th>
+                                <th>Meter Size</th>
+                                <th>Last Rate</th>
+                                <th>Current Rate</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{
+    //clsBoardRentMaster _objTemp = new clsBoardRentMaster()
+    if (Model != null)
+    {
+        for (int i = 0; i < Model.Count; i++)
+        //foreach (var data in Model.ToList())
+        {
+            <tr>
+                <td>@Model[i].EffectDate.ToString("dd/MM/yyyy")</td>
+                <td>@Model[i].MeterType</td>
+                <td>@Model[i].MeterSize</td>
+                <td>@Model[i].oldRate</td>
+                <td>@Html.TextBoxFor(x => Model[i].Rate, new { @class = "form-control" })</td>
+                <td style="display:none">
+                    @Html.HiddenFor(x => Model[i].ID)
+                    @Html.HiddenFor(x => Model[i].EffectDate)
+                    @Html.HiddenFor(x => Model[i].RefMeterTypeId)
+                    @Html.HiddenFor(x => Model[i].RefMeterSizeId)
+                    @Html.HiddenFor(x => Model[i].InsUser)
+                    @Html.HiddenFor(x => Model[i].InsDate)
+                    @Html.HiddenFor(x => Model[i].InsTerminal)
+                    @Html.HiddenFor(x => Model[i].UpdUser)
+                    @Html.HiddenFor(x => Model[i].UpdDate)
+                    @Html.HiddenFor(x => Model[i].UpdTerminal)
+                </td>
+            </tr>
+        }
+    }
+    else
+    {
+        <tr><td colspan="7">No Record Found!</td></tr>
+    }
+
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="box-footer">
+                    <input id="btnSubmit" type="submit" value="Submit" class="btn btn-primary btnSubmit" /> &nbsp; &nbsp;
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        if ('@TempData["Success"]' != '')
+            toastr["success"]('@TempData["Success"]');
+        else if ('@TempData["Warning"]' != '')
+            toastr["warning"]('@TempData["Warning"]');
+    });
+</script>

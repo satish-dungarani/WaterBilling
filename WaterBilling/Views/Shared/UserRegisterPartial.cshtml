@@ -1,0 +1,175 @@
+﻿@model WaterBilling.Models.RegisterViewModel
+
+@*<script src="~/content/plugins/jQuery/jQuery-2.1.4.min.js"></script>
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+<script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>*@
+
+
+<div id="divRegister" class="modal extended-modal fade no-display" tabindex="-1" data-width="800" data-height="400" style="z-index: 2000 !important">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header bg-light-blue">
+
+                <button type="button" class="close" id="btnClose" data-dismiss="modal" aria-hidden="true">
+                    &times;
+
+                </button>
+                <h4 class="modal-title">Set User Role </h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        @using (Html.BeginForm("Register", "Account", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                        {
+                            @Html.AntiForgeryToken()
+
+                            <input type="hidden" name="UserId" id="UserId" />
+                            <input type="hidden" name="RegType" id="RegType" />
+
+
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label>User Name</label>
+                                    @Html.TextBoxFor(m => m.UserName, new { @class = "form-control" })
+                                </div>
+                            </div>
+
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label>User Role</label>
+                                    @Html.DropDownList("RefRoleId", new SelectList((IEnumerable<SelectListItem>)ViewData["fillUserRole"], "Value", "Text"), new { @class = "form-control" })
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label>Password</label>
+                                    @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
+                                </div>
+                            </div>
+
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label>Confirm Password</label>
+                                    @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control" })
+                                </div>
+                            </div>
+
+                            @*<h4 class="modal-title">Set Collection Center </h4>
+
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label>Collection Center</label>
+                                    @Html.DropDownList("RefCollectionCenterId", new SelectList((IEnumerable<SelectListItem>)ViewData["fillCollectionCenter"], "Value", "Text"), new { @class = "form-control select2 select2-hidden-accessible", style = "width: 100%;", multiple = "multiple" })
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label>Collection Center Is Active</label>
+                                    @Html.CheckBoxFor(m => m.IsActive)
+                                </div>
+                            </div>*@
+                            
+                            @*@Html.Partial("UserCollCentRightsPartial")*@
+
+
+                            <div class="form-group">
+                                <div class="col-md-10">
+                                    <input id="btnRegister" type="submit" class="btn btn-primary" value="Register" onclick="return Validation();" />
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $(".select2").select2();
+        //$("#RefCollectionCenterId").change(function () {
+        //    $("#RefCollectionCenterId").val($("#RefCollectionCenterId").val());
+        //});
+
+        //CollectionCenterRightsRetrive();
+        
+    });
+
+    function Validation() {
+        debugger;
+        var _UserName = $("#UserName").val();
+        if (_UserName == '' || _UserName == undefined) {
+            toastr["warning"]('User Name can not left blank!');
+            $("#UserName").focus();
+            return false;
+        }
+
+        var _UserRole = $("#RefRoleId").val();
+        if (_UserRole == '' || _UserRole == undefined) {
+            toastr["warning"]('User Role can not left blank!');
+            $("#RefRoleId").focus();
+            return false;
+        }
+
+        var _Password = $("#Password").val();
+        if (_Password == '' || _Password == undefined) {
+            toastr["warning"]('Password can not left blank!');
+            $("#Password").focus();
+            return false;
+        }
+
+        var _ConfPassword = $("#ConfirmPassword").val();
+        if (_ConfPassword == '' || _ConfPassword == undefined) {
+            toastr["warning"]('Confirm Password can not left blank!');
+            $("#ConfirmPassword").focus();
+            return false;
+        }
+
+        if (_ConfPassword != _Password) {
+            toastr["warning"]('Password and Confirm Password not equal!');
+            $("#ConsfirmPassword").focus();
+            return false;
+        }
+
+    
+
+        return true;
+    }
+
+    function CollectionCenterRightsRetrive() {
+        debugger;
+        $.ajax({
+            type: 'post',
+            datatype: 'json',
+            cache: false,
+            url: '@Url.Action("Register","Account")',
+            data: { model: Model },
+            beforesend: function () {
+                debugger;
+                $("#ajaxLoader").show();
+            },
+            success: function () {
+                debugger;
+                $("#ajaxLoader").hide();
+                toastr["success"]('User Registerd Successfully.')
+            },
+            error: function () {
+                debugger;
+                $("#ajaxLoader").hide();
+                toastr["warning"]('User Registration Failed!');
+            }
+        });
+    }
+
+</script>
+<style type="text/css">
+    .select2-dropdown {
+        z-index: 2001 !important;
+    }
+</style>

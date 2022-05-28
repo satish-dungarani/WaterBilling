@@ -1,0 +1,145 @@
+﻿@model WaterBilling.Models.ReceiptDetailModel
+@{
+    ViewBag.Title = "Cheque And DD Status";
+}
+<div class="content-wrapper" style="min-height: 946px;">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <h1>
+            Cheque And DD Status
+            <small></small>
+        </h1>
+        <ol class="breadcrumb">
+            <li><a href="#"><i class="fa fa-dashboard"></i>Home</a></li>
+            <li><a href="#">Setup</a></li>
+            <li class="active">Masters</li>
+        </ol>
+    </section>
+
+    <section class="content">
+        @using (Ajax.BeginForm("Select", "ChequeStatus", new AjaxOptions { HttpMethod = "POST", OnBegin = "", OnSuccess = "SuccessFunction", OnFailure = "MessagePrintOnFailed" }))
+        {
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="box box-primary">
+                        @Html.HiddenFor(Model => Model.Id)
+                        @Html.HiddenFor(Model => Model.InsUser)
+                        @Html.HiddenFor(Model => Model.InsTerminal)
+                        @Html.HiddenFor(Model => Model.UpdUser)
+                        @Html.HiddenFor(Model => Model.UpdTerminal)
+                        <div class="box-body">
+                            <div class="box-header with-border">
+                                <h3 class="box-title text-blue text-bold">Basic Information</h3>
+                            </div>
+
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label>Receipt Date</label>
+                                    @Html.TextBoxFor(Model => Model.ChqStatusReceiptDate, new { @class = "form-control pull-right active" })
+                                </div>
+                            </div>
+
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label>Collection Center</label>
+                                    @Html.DropDownList("RefChqStatusCCId", new SelectList((IEnumerable<SelectListItem>)ViewData["fillCollectionCenter"], "Value", "Text"), new { @class = "form-control select2 select2-hidden-accessible", style = "width: 100%;", multiple = "multiple" })
+                                </div>
+                            </div>
+
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label>Consumer No</label>
+                                    @Html.TextBoxFor(Model => Model.ConsumerNo, new { @class = "form-control" })
+                                </div>
+                            </div>
+
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label>Consumer No</label>
+                                    @Html.DropDownList("IsChqStatus", new List<SelectListItem>{new SelectListItem { Text= "PASS", Value ="PASS", Selected = true},new SelectListItem { Text= "BOUNCE", Value ="BOUNCE", Selected = false}}, new { @class = "form-control" })
+                                </div>
+                            </div>
+
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <input id="btnSubmit" type="submit" value="Load" class="btn btn-primary btnSubmit" style="margin-top:24px" onclick="return Validation();"  /> &nbsp; &nbsp;
+                                    <input id="btnDiscard" type="button" value="Discard" class="btn btn-primary btnSubmit" style="margin-top:24px" onclick="RetrieveRightsData();" /> &nbsp; &nbsp;
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="divChqStatus">
+                @Html.Partial("LoadCosumerChequeandDDdetailPartial")
+            </div>
+        }
+    </section>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $("#ChqStatusReceiptDate ").daterangepicker();
+
+        $("#RefChqStatusCCId").select2();
+
+       
+    });
+
+
+    function Validation()
+    {
+
+        var _ReceiptDateRange = $("#ChqStatusReceiptDate")
+        // validate a receipt date range
+        if(_ReceiptDateRange .val()== '' || _ReceiptDateRange .val() == undefined )
+        {
+            $("#ChqStatusReceiptDate").focus();
+            toastr["warning"]('Receipt Date Rang Cns not left blank!');
+            return false;
+        }
+        return true;
+    }
+
+    function RetrieveRightsData() {
+        var _RoleId = $("#RefRoleId").val()
+        if (_RoleId != "") {
+            $.ajax({
+                type: 'get',
+                datatype: 'html',
+                url: '@Url.Action("Select","ChequeStatus")',
+                data: { },
+                beforesend: function () {
+                    $("ajaxloader").show();
+                },
+                success: function (response) {
+                    $("ajaxloader").hide();
+                    $("#divRights").html(response);
+
+                },
+                error: function () {
+                    $("ajaxloader").hide();
+                }
+            });
+        }
+        else {
+            $("#divRights").html('');
+        }
+        $("#RefRoleId").prop('disabled', false);
+    }
+
+    function SuccessFunction(response) {
+        $("#divChqStatus").html(response);
+        //toastr["success"]('Cheque Status Load Successfully!');
+        $("#IsChequeStatus").prop('readonly', true);
+    }
+
+    function MessagePrintOnFailed(response) {
+        $("#divChqStatus").html(response);
+        toastr["warning"]('Cheque Status Load Failed!');
+        $("#IsChequeStatus").prop('readonly', false);
+    }
+
+</script>

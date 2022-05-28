@@ -1,0 +1,690 @@
+﻿@model WaterBilling.Models.ConsumerMasterModel
+
+@{
+
+    Layout = "";
+}
+
+@{
+    WaterBilling.Models.ConsumerMeterMasterModel _ConsumerMeter = new WaterBilling.Models.ConsumerMeterMasterModel();
+}
+<div class="content-wrapper" style="min-height: 946px;">
+    <section class="content-header">
+        <h1>
+            Consumer - @Html.DisplayFor(Model => Model.ConsumerNo)
+            <small></small>
+        </h1>
+        <ol class="breadcrumb">
+            <li><a href="#"><i class="fa fa-dashboard"></i>Home</a></li>
+            <li><a href="#">Setup</a></li>
+            <li class="active">Manage</li>
+        </ol>
+    </section>
+
+
+    <section class="content">
+
+        <div class="row">
+            <div class="col-md-12">
+                <!-- Custom Tabs -->
+                <div class="nav-tabs-custom">
+                    <ul class="nav nav-tabs">
+                        <li id="liConsumer" class="active"><a href="#Consumer" onclick="displaytab('Consumer');" data-toggle="tab" id="ConsumerTag">Consumer Details</a></li>
+                        <li id="liMeter" class=""><a href="#Meter" onclick="displaytab('Meter');" data-toggle="tab" id="MeterTag">Meter Details</a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="Consumer">
+
+                            @using (Ajax.BeginForm("Save", "Consumer", new AjaxOptions { HttpMethod = "POST", OnSuccess = "afterSuccess" }))
+                            {
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="box box-primary">
+
+                                            <div class="box-body">
+
+                                                @Html.HiddenFor(Model => Model.Id)
+                                                @Html.HiddenFor(Model => Model.InsUser)
+                                                @Html.HiddenFor(Model => Model.InsDate)
+                                                @Html.HiddenFor(Model => Model.InsTerminal)
+                                                @Html.HiddenFor(Model => Model.UpdUser)
+                                                @Html.HiddenFor(Model => Model.UpdDate)
+                                                @Html.HiddenFor(Model => Model.UpdTerminal)
+
+                                                <div class="col-md-6">
+                                                    @*Basic Information*@
+                                                    <div class="form-group">
+                                                        <div class="box-header with-border">
+                                                            <h3 class="box-title text-blue text-bold">Basic Information</h3>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="col-xs-6">
+                                                            <div class="form-group">
+                                                                <label>Consumer No.</label>
+                                                                @Html.TextBoxFor(Model => Model.ConsumerNo, new { @class = "form-control", disabled = true })
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xs-6">
+                                                            <div class="form-group">
+                                                                <label>Old Consumer No.</label>
+                                                                @Html.TextBoxFor(Model => Model.OldConsumerNo, new { @class = "form-control", disabled = true })
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="col-xs-4">
+                                                            <div class="form-group">
+                                                                <label>First Name</label>
+                                                                @Html.TextBoxFor(Model => Model.FirstName, new { @class = "form-control", disabled = true })
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xs-4">
+                                                            <div class="form-group">
+                                                                <label>Middle Name</label>
+                                                                @Html.TextBoxFor(Model => Model.MiddleName, new { @class = "form-control", disabled = true })
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xs-4">
+                                                            <div class="form-group">
+                                                                <label>Last Name</label>
+                                                                @Html.TextBoxFor(Model => Model.LastName, new { @class = "form-control", disabled = true })
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="col-xs-4">
+                                                            <div class="form-group">
+                                                                <label>First Name Marathi</label>
+                                                                @Html.TextBoxFor(Model => Model.FirstNameMarathi, new { @class = "form-control", disabled = true})
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xs-4">
+                                                            <div class="form-group">
+                                                                <label>Middle Name Marathi</label>
+                                                                @Html.TextBoxFor(Model => Model.MiddleNameMarathi, new { @class = "form-control", disabled = true })
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xs-4">
+                                                            <div class="form-group">
+                                                                <label>Last Name Marathi</label>
+                                                                @Html.TextBoxFor(Model => Model.LastNameMarathi, new { @class = "form-control", disabled = true })
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    @*Address Information*@
+                                                    <div class="form-group">
+                                                        <div class="box-header with-border">
+                                                            <h3 class="box-title text-blue text-bold">Address Information</h3>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="col-xs-12">
+                                                            <div class="form-group">
+                                                                <label>Address</label>
+                                                                <div class="in"></div>
+                                                                @Html.TextAreaFor(Model => Model.Address, new { @class = "form-control", disabled = true })
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="col-xs-6">
+                                                            <div class="form-group">
+                                                                <label>City Name</label>
+                                                                @Html.TextBoxFor(Model => Model.LastNameMarathi, new { @class = "form-control", disabled = true })
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-xs-6">
+                                                            <div class="form-group">
+                                                                <label>Pincode</label>
+                                                                @Html.TextBoxFor(Model => Model.PinCode, new { @class = "form-control", disabled = true })
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="col-xs-6">
+                                                            <div class="form-group">
+                                                                <label>State Name</label>
+                                                                @Html.TextBoxFor(Model => Model.LastNameMarathi, new { @class = "form-control", disabled = true })
+                                                            </div>
+                                                        </div>
+
+
+                                                        <div class="col-xs-6">
+                                                            <div class="form-group">
+                                                                <label>Country Name</label>
+                                                                @Html.TextBoxFor(Model => Model.LastNameMarathi, new { @class = "form-control", disabled = true })
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    @*Contact Informaton*@
+                                                    <div class="form-group">
+                                                        <div class="box-header with-border">
+                                                            <h3 class="box-title text-blue text-bold">Contact Information</h3>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="col-xs-6">
+                                                            <div class="form-group">
+                                                                <label>Mobile No.</label>
+                                                                <div class="input-group">
+                                                                    <div class="input-group-addon">
+                                                                        <i class="fa fa-mobile-phone"></i>
+                                                                    </div>
+                                                                    @Html.TextBoxFor(Model => Model.MobileNo, new { @class = "form-control", disabled = true })
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xs-6">
+                                                            <div class="form-group">
+                                                                <label>Email Id</label>
+                                                                <div class="input-group">
+                                                                    <div class="input-group-addon">
+                                                                        <i class="fa fa-envelope"></i>
+                                                                    </div>
+                                                                    @Html.TextBoxFor(Model => Model.EmailID, new { @class = "form-control", disabled = true })
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="col-xs-6">
+                                                            <div class="form-group">
+                                                                <label>Contact 1</label>
+                                                                <div class="input-group">
+                                                                    <div class="input-group-addon">
+                                                                        <i class="fa fa-phone"></i>
+                                                                    </div>
+                                                                    @Html.TextBoxFor(Model => Model.Contact1, new { @class = "form-control", disabled = true })
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xs-6">
+                                                            <div class="form-group">
+                                                                <label>Contact 2</label>
+                                                                <div class="input-group">
+                                                                    <div class="input-group-addon">
+                                                                        <i class="fa fa-phone"></i>
+                                                                    </div>
+                                                                    @Html.TextBoxFor(Model => Model.Contact2, new { @class = "form-control", disabled = true })
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="col-xs-6">
+                                                            <div class="form-group">
+                                                                <label>Family Member</label>
+                                                                @Html.TextBoxFor(Model => Model.FamilyMember, new { @class = "form-control", disabled = true })
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xs-6">
+                                                            <div class="form-group">
+                                                                <label>No of Connections</label>
+                                                                @Html.TextBoxFor(Model => Model.NoOfConnections, new { @class = "form-control", disabled = true })
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+
+                                                    @*Previous Information*@
+                                                    <div class="form-group">
+                                                        <div class="box-header with-border">
+                                                            <h3 class="box-title text-blue text-bold">Previous Information</h3>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="col-xs-6">
+                                                            <div class="form-group">
+                                                                <label>Prev Bill Date</label>
+                                                                <div class="input-group">
+                                                                    <div class="input-group-addon">
+                                                                        <i class="fa fa-calendar"></i>
+                                                                    </div>
+                                                                    @Html.TextBoxFor(Model => Model.PrevBillDate, "{0:dd/MM/yyyy}", new { @class = "form-control", disabled = true, value = "", placeholder = "dd/MM/yyyy" })
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xs-6">
+                                                            <div class="form-group">
+                                                                <label>Prev Reading Date</label>
+                                                                <div class="input-group">
+                                                                    <div class="input-group-addon">
+                                                                        <i class="fa fa-calendar"></i>
+                                                                    </div>
+                                                                    @Html.TextBoxFor(Model => Model.PrevReadingDate, "{0:dd/MM/yyyy}", new { @class = "form-control", disabled = true, value = "", placeholder = "dd/MM/yyyy" })
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="col-xs-4">
+                                                            <div class="form-group">
+                                                                <label>Prev Reading</label>
+                                                                @Html.TextBoxFor(Model => Model.PrevReading, new { @class = "form-control", disabled = true })
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xs-4">
+                                                            <div class="form-group">
+                                                                <label>Prev DPC</label>
+                                                                @Html.TextBoxFor(Model => Model.PrevDPC, new { @class = "form-control", disabled = true })
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xs-4">
+                                                            <div class="form-group">
+                                                                <label>Prev Amount</label>
+                                                                @Html.TextBoxFor(Model => Model.PrevAmount, new { @class = "form-control", disabled = true })
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="col-xs-6">
+                                                            <div class="form-group">
+                                                                <label>Prev Assessment Amout</label>
+                                                                @Html.TextBoxFor(Model => Model.PrevAssessmentAmt, new { @class = "form-control", disabled = true })
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xs-6">
+                                                            <div class="form-group">
+                                                                <label>Prev Rent</label>
+                                                                @Html.TextBoxFor(Model => Model.PrevRent, new { @class = "form-control", disabled = true })
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <div class="box-header with-border">
+                                                            <h3 class="box-title text-blue text-bold">Other Information</h3>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-xs-6">
+                                                            <div class="form-group">
+                                                                <label>Zone Type</label>
+                                                                @Html.TextBoxFor(Model => Model.LastNameMarathi, new { @class = "form-control", disabled = true })
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-xs-6">
+                                                            <div class="form-group">
+                                                                <label>Reader Name</label>
+                                                                @Html.TextBoxFor(Model => Model.LastNameMarathi, new { @class = "form-control", disabled = true })
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="col-xs-6">
+                                                            <div class="form-group">
+                                                                <label>Average Consumption</label>
+                                                                @Html.TextBoxFor(Model => Model.AverageConsumption, new { @class = "form-control", disabled = true })
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-xs-6">
+                                                            <div class="form-group">
+                                                                <label>Deposite</label>
+                                                                @Html.TextBoxFor(Model => Model.Deposite, new { @class = "form-control", disabled = true })
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="col-xs-6">
+                                                            <div class="form-group">
+                                                                <label>Construction Type</label>
+                                                                @Html.TextBoxFor(Model => Model.LastNameMarathi, new { @class = "form-control", disabled = true })
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-xs-6">
+                                                            <div class="form-group">
+                                                                <label>DMA Type</label>
+                                                                @Html.TextBoxFor(Model => Model.LastNameMarathi, new { @class = "form-control", disabled = true })
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="col-xs-6">
+                                                            <div class="form-group">
+                                                                <label>Meter Size</label>
+                                                                @Html.TextBoxFor(Model => Model.LastNameMarathi, new { @class = "form-control", disabled = true })
+                                                            </div>
+                                                        </div>
+
+
+                                                        <div class="col-xs-6">
+                                                            <div class="form-group">
+                                                                <label>Meter Type</label>
+                                                                @Html.TextBoxFor(Model => Model.LastNameMarathi, new { @class = "form-control", disabled = true })
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="col-xs-6">
+                                                            <div class="form-group">
+                                                                <label>Supply Type</label>
+                                                                @Html.TextBoxFor(Model => Model.LastNameMarathi, new { @class = "form-control", disabled = true })
+                                                            </div>
+                                                        </div>
+
+
+                                                        <div class="col-xs-6">
+                                                            <div class="form-group">
+                                                                <label>Supply Category</label>
+                                                                @Html.TextBoxFor(Model => Model.LastNameMarathi, new { @class = "form-control", disabled = true })
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="col-xs-6">
+                                                            <div class="form-group">
+                                                                <label>Book No</label>
+                                                                @Html.TextBoxFor(Model => Model.BookNo, new { @class = "form-control", disabled = true })
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-xs-6">
+                                                            <div class="form-group">
+                                                                <label>Beat No</label>
+                                                                @Html.TextBoxFor(Model => Model.BeatNo, new { @class = "form-control", disabled = true })
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="col-xs-6">
+                                                            <div class="form-group">
+                                                                <label>Folio No</label>
+                                                                @Html.TextBoxFor(Model => Model.FolioNo, new { @class = "form-control", disabled = true })
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-xs-6">
+                                                            <div class="form-group">
+                                                                <div class="radio">
+                                                                    <label>
+                                                                        @Html.RadioButtonFor(Model => Model.OddEven, "O", new { @checked = "true", disabled = true })
+                                                                        Odd
+                                                                    </label>
+                                                                </div>
+                                                                <div class="radio">
+                                                                    <label>
+                                                                        @Html.RadioButtonFor(Model => Model.OddEven, "E", new { disabled = true })
+                                                                        Even
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="col-xs-6">
+                                                            <div class="form-group">
+                                                                <label>Connection Date</label>
+                                                                <div class="input-group">
+                                                                    <div class="input-group-addon">
+                                                                        <i class="fa fa-calendar"></i>
+                                                                    </div>
+                                                                    @Html.TextBoxFor(Model => Model.ConnectionDate, "{0:dd/MM/yyyy}", new { @class = "form-control", disabled = true,  @value = "", placeholder = "dd/MM/yyyy" })
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-xs-6">
+                                                            <div class="form-group">
+                                                                <label>SancRef</label>
+                                                                @Html.TextBoxFor(Model => Model.SancRef, new { @class = "form-control", disabled = true })
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="col-xs-6">
+                                                            <div class="form-group">
+                                                                <label>Letter No</label>
+                                                                @Html.TextBoxFor(Model => Model.LetterNo, new { @class = "form-control", disabled = true })
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-xs-6">
+                                                            <div class="form-group">
+                                                                <label>Letter Date</label>
+                                                                <div class="input-group">
+                                                                    <div class="input-group-addon">
+                                                                        <i class="fa fa-calendar"></i>
+                                                                    </div>
+                                                                    @Html.TextBoxFor(Model => Model.LetterDate, "{0:dd/MM/yyyy}", new { @class = "form-control", disabled = true, value = "", placeholder = "dd/MM/yyyy" })
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="col-xs-6">
+                                                            <div class="form-group">
+                                                                <label>TR No</label>
+                                                                @Html.TextBoxFor(Model => Model.TRNo, new { @class = "form-control", disabled = true })
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xs-6">
+                                                            <div class="form-group">
+                                                                <label>TR Date</label>
+                                                                <div class="input-group">
+                                                                    <div class="input-group-addon">
+                                                                        <i class="fa fa-calendar"></i>
+                                                                    </div>
+                                                                    @Html.TextBoxFor(Model => Model.TRDate, "{0:dd/MM/yyyy}", new { @class = "form-control", disabled = true, value = "", placeholder = "dd/MM/yyyy" })
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="col-xs-6">
+                                                            <div class="form-group">
+                                                                <label>Plumber LicNo</label>
+                                                                @Html.TextBoxFor(Model => Model.PlumberLicNo, new { @class = "form-control", disabled = true })
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xs-6">
+                                                            <div class="form-group">
+                                                                <label>Plumber Name</label>
+                                                                @Html.TextBoxFor(Model => Model.PlumberName, new { @class = "form-control", disabled = true })
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="col-xs-6">
+                                                            <div class="form-group">
+                                                                <label>Plot Id</label>
+                                                                @Html.TextBoxFor(Model => Model.PlotId, new { @class = "form-control", disabled = true })
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-xs-6">
+                                                            <div class="form-group">
+                                                                <label>Disconnected Date</label>
+                                                                <div class="input-group">
+                                                                    <div class="input-group-addon">
+                                                                        <i class="fa fa-calendar"></i>
+                                                                    </div>
+                                                                    @Html.TextBoxFor(Model => Model.DisconnectedDate, "{0:dd/MM/yyyy}", new { @class = "form-control", disabled = true, value = "", placeholder = "dd/MM/yyyy" })
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="col-xs-6">
+                                                            <div class="form-group">
+                                                                <label>Disconnection Order No</label>
+                                                                @Html.TextBoxFor(Model => Model.DisconnectionOrderNo, new { @class = "form-control", disabled = true })
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xs-6">
+                                                            <div class="form-group">
+                                                                <label>Disconnection Order Date</label>
+                                                                <div class="input-group">
+                                                                    <div class="input-group-addon">
+                                                                        <i class="fa fa-calendar"></i>
+                                                                    </div>
+                                                                    @Html.TextBoxFor(Model => Model.DisconnectionOrderDate, "{0:dd/MM/yyyy}", new { @class = "form-control", disabled = true, value = "", placeholder = "dd/MM/yyyy" })
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="col-xs-6">
+                                                            <div class="form-group">
+                                                                <label>Reconnected Order No</label>
+                                                                @Html.TextBoxFor(Model => Model.ReconnectedOrderNo, new { @class = "form-control", disabled = true })
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xs-6">
+                                                            <div class="form-group">
+                                                                <label>ReConnected Date</label>
+                                                                <div class="input-group">
+                                                                    <div class="input-group-addon">
+                                                                        <i class="fa fa-calendar"></i>
+                                                                    </div>
+                                                                    @Html.TextBoxFor(Model => Model.ReConnectedDate, "{0:dd/MM/yyyy}", new { @class = "form-control", disabled = true, value = "", placeholder = "dd/MM/yyyy" })
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+                                            <div class="box-footer">
+                                                @Html.ActionLink("Back", "index","Home", null, new { @class = "btn btn-primary btn-submit" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div><!-- /.tab-pane -->
+                        <div class="tab-pane" id="Meter">
+
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="box box-primary">
+
+                                        <div class="box-body">
+                                            <div class="col-md-12">
+                                                <div class="box-body">
+                                                    <div class="row">
+                                                        <table class="table table-bordered table-hover" id="tblMaster">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>Meter No.</th>
+                                                                    <th>initial Reading</th>
+                                                                    <th>Start Date</th>
+                                                                    <th>In Active Date</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody></tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                                            @*@Html.Action("Manage", "ConsumerMeter")*@
+                                            @*@if (_ConsumerMeter == null)
+                            {
+                                @Html.Partial("MeterDetailPartial", new WaterBilling.Models.ConsumerMeterMasterModel())
+                            }
+                            else
+                            {
+                                @Html.Partial("MeterDetailPartial", _ConsumerMeter)
+                            }*@
+
+
+                                        </div><!-- /.tab-pane -->
+
+                                    </div><!-- /.tab-content -->
+                                </div><!-- nav-tabs-custom -->
+                            </div><!-- /.col -->
+                        </div>
+    </section>
+</div>
+
+<script type="text/javascript">
+    jQuery(document).ready(function () {
+        SetMarathiFont("FirstNameMarathi");
+        SetMarathiFont("MiddleNameMarathi");
+        SetMarathiFont("LastNameMarathi");
+
+        var _Id = $("#Id").val() == null ? 0 : $("#Id").val();
+
+        fillGridMeter(_Id);
+
+    });
+
+    function fillGridMeter(_Id) {
+
+        jQuery('#tblMaster').dataTable().fnDestroy();
+        var oTable = jQuery('#tblMaster').dataTable({
+            "bServerSide": true,
+            "sAjaxSource": '@Url.Action("AjaxHandlerMeter", "Consumer")',
+            "fnServerData": function (sSource, aoData, fnCallback) {
+                aoData.push({ "name": "_ConsumerId", "value": _Id });
+
+                $.ajax({
+                    "dataType": 'json',
+                    "type": "POST",
+                    "url": sSource,
+                    "data": aoData,
+                    "success": fnCallback
+                })
+            },
+            "bProcessing": false,
+            "responsive": true,
+            "sPaginationType": 'full_numbers',
+
+            "oLanguage": {
+                "sLengthMenu": "Show _MENU_ Rows",
+                "sSearch": "",
+                "oPaginate": {
+                    "sPrevious": "",
+                    "sNext": ""
+                }
+            },
+            "aaSorting": [[0, 'asc']],
+            "aoColumns": [
+
+                          { "sName": "MeterNo" },
+                          { "sName": "InitialReading" },
+                          { "sName": "StartDate" },
+                          { "sName": "InActiveDate" }
+
+            ]
+        })
+    }
+</script>

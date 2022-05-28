@@ -1,0 +1,50 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.21005.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WaterBilling", "WaterBilling\WaterBilling.csproj", "{BA3B8A53-1481-4993-9244-1E457D890209}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WaterBillingDA", "WaterBillingDA\WaterBillingDA.csproj", "{C5C83B6E-4634-4297-B1F7-776611DDD742}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WaterBillingDB", "WaterBillingDB\WaterBillingDB.csproj", "{90FABE6B-B070-44D6-84A1-347FAEC1D88A}"
+EndProject
+Global
+	GlobalSection(SourceCodeControl) = preSolution
+		SccNumberOfProjects = 4
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = WaterBilling\\WaterBilling.csproj
+		SccLocalPath1 = .
+		SccProjectFilePathRelativizedFromConnection1 = WaterBilling\\
+		SccProjectUniqueName2 = WaterBillingDA\\WaterBillingDA.csproj
+		SccLocalPath2 = .
+		SccProjectFilePathRelativizedFromConnection2 = WaterBillingDA\\
+		SccProjectUniqueName3 = WaterBillingDB\\WaterBillingDB.csproj
+		SccLocalPath3 = .
+		SccProjectFilePathRelativizedFromConnection3 = WaterBillingDB\\
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BA3B8A53-1481-4993-9244-1E457D890209}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BA3B8A53-1481-4993-9244-1E457D890209}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BA3B8A53-1481-4993-9244-1E457D890209}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BA3B8A53-1481-4993-9244-1E457D890209}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C5C83B6E-4634-4297-B1F7-776611DDD742}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C5C83B6E-4634-4297-B1F7-776611DDD742}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C5C83B6E-4634-4297-B1F7-776611DDD742}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C5C83B6E-4634-4297-B1F7-776611DDD742}.Release|Any CPU.Build.0 = Release|Any CPU
+		{90FABE6B-B070-44D6-84A1-347FAEC1D88A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{90FABE6B-B070-44D6-84A1-347FAEC1D88A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{90FABE6B-B070-44D6-84A1-347FAEC1D88A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{90FABE6B-B070-44D6-84A1-347FAEC1D88A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		EnterpriseLibraryConfigurationToolBinariesPathV6 = packages\EnterpriseLibrary.Common.6.0.1304.0\lib\NET45;packages\EnterpriseLibrary.Data.6.0.1304.0\lib\NET45;packages\EnterpriseLibrary.Data.SqlCe.6.0.1304.0\lib\NET45
+	EndGlobalSection
+EndGlobal

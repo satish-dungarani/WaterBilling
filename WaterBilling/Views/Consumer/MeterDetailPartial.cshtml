@@ -1,0 +1,201 @@
+﻿@model WaterBilling.Models.ConsumerMeterMasterModel
+
+@{
+    Layout = "";
+    ViewBag.Title = "Consumer Meter";
+}
+
+@using (Ajax.BeginForm("SaveMeterDetail", "Consumer", new AjaxOptions { HttpMethod = "POST", OnSuccess = "editSessionMeter(-2)" }))
+{
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box box-primary">
+
+                <div class="box-body">
+                    
+                    @Html.HiddenFor(Model => Model.MeterId)
+                    @Html.HiddenFor(Model => Model.RefConsumerId)
+                    @Html.HiddenFor(Model => Model.InsUser)
+                    @Html.HiddenFor(Model => Model.InsDate)
+                    @Html.HiddenFor(Model => Model.InsTerminal)
+                    @Html.HiddenFor(Model => Model.UpdUser)
+                    @Html.HiddenFor(Model => Model.UpdDate)
+                    @Html.HiddenFor(Model => Model.UpdTerminal)
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <div class="box-header with-border">
+                                <h3 class="box-title text-blue text-bold">Basic Information</h3>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <div class="form-group">
+                                    <label>Meter No.</label>
+                                    @Html.TextBoxFor(Model => Model.MeterNo, new { @class = "form-control", @maxlength = 20 })
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <div class="form-group">
+                                    <label>Meter Make</label>
+                                    @Html.TextBoxFor(Model => Model.MeterMake, new { @class = "form-control", @maxlength = 20 })
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <div class="form-group">
+                                    <label>Initial Reading</label>
+                                    @Html.TextBoxFor(Model => Model.InitialReading, new { @class = "form-control", @maxlength = 10 })
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <div class="form-group">
+                                    <label>Start Date</label>
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-calendar"></i>
+                                        </div>
+                                        @Html.TextBoxFor(Model => Model.StartDate, "{0:dd/MM/yyyy}", new { @class = "form-control", @maxlength = 10, placeholder = "dd/MMM/yyyy" })
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <div class="form-group">
+                                    <label>In Active Date</label>
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-calendar"></i>
+                                        </div>
+                                        @Html.TextBoxFor(Model => Model.InActiveDate, "{0:dd/MM/yyyy}", new { @class = "form-control", @maxlength = 10, placeholder = "dd/MMM/yyyy" })
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <div class="form-group">
+                                    <label>Max Reading No</label>
+                                    @Html.TextBoxFor(Model => Model.MaxReadingNo, new { @class = "form-control", @maxlength = 10 })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    @Html.Partial("MeterListPartial")
+                </div>
+
+
+                <div class="box-footer">
+                    <input id="btnSubmit" type="submit" value="Submit" class="btn btn-primary btnSubmit" onclick="return ValidationMeter();" /> &nbsp; &nbsp;
+                    <input id="btnCancle" type="button" value="Cancle" class="btn btn-primary" onclick="return editSessionMeter(-1);" /> &nbsp; &nbsp;
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<script type="text/javascript">
+    jQuery(document).ready(function () {
+        
+        var _Val = $("#Id").val();
+        $("#RefConsumerId").val(_Val);
+        //$("#DOB").attr("data-inputmask='alias': 'dd/mm/yyyy' data-mask=''");
+        //$("[data-mask]").inputmask();
+        //$("#datemask2").inputmask("mm/dd/yyyy", { "placeholder": "mm/dd/yyyy" });
+
+        
+    });
+
+    //clear sesson value on cancel click
+    //function SessincClear()
+    //{
+    //    debugger;
+    //    Session["ConsumerId"] = null;
+    //}
+
+    //function for DateRange Picker
+    //function SetDatePicker(_ControlName, _ClearBtn) {
+    //    debugger;
+
+    //    $('input[name="' + _ControlName + '"]').datepicker({
+    //        showOnFocus: true,
+    //        format: 'dd/mm/yyyy',
+    //        todayHighlight: true,
+    //        autoclose: true,
+    //        todayBtn: true,
+    //        clearBtn: _ClearBtn,
+
+
+    //        //defaultViewDate: { year: 2015, month: 01, day: 01 }
+    //    });
+    //    SetDefaultValue(_ControlName);
+    //}
+
+    //function SetDefaultValue(_ControlName) {
+    //    var _val = $("#" + _ControlName).val()
+    //    if (_val == "01-01-0001" && _ControlName == "StartDate") {
+    //        _val = Date();
+    //    }
+    //    else if (_val != "01-01-0001" || (_val != "01-01-0001" && _ControlName == "StartDate")) {
+    //        _val;
+    //    }
+    //    else {
+    //        _val = "";
+    //    }
+    //    $('input[name="' + _ControlName + '"]').datepicker("setDate", _val)
+    //}
+
+    function ValidationMeter() {
+
+        
+        //Session["ConsumerId"]= null;
+        var _MeterNo = $("#MeterNo");
+        var _MeterMake = $("#MeterMake");
+        var _InitialReading = $("#InitialReading");
+        var _MaxReadingNo = $("#MaxReadingNo");
+
+        // To validate Meter No
+        if (_MeterNo.val() == '' || _MeterNo.val() == undefined) {
+            _MeterNo.focus();
+            toastr["warning"]('Meter No. can not left blank!');
+            return false;
+        }
+
+        // To validate user Meter Make
+        if (_MeterMake.val() == '' || _MeterMake.val() == undefined) {
+            _MeterMake.focus();
+            toastr["warning"]('Meter Make can not left blank!');
+            return false;
+        }
+
+        // To validate InitialReading
+        if (_InitialReading.val() == '' || _InitialReading.val() == undefined) {
+            _MobileNo.focus();
+            toastr["warning"]('initial Reading can not left blank!');
+            return false;
+        }
+
+        // To validate user MaxReadingNo
+        if (_MaxReadingNo.val() == '' || _MaxReadingNo.val() == undefined) {
+            _MaxReadingNo.focus();
+            toastr["warning"]('Max Reading No can not left blank!');
+            return false;
+        }
+
+        return true;
+    }
+
+</script>

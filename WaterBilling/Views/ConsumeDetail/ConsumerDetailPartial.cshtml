@@ -1,0 +1,44 @@
+﻿@model WaterBilling.Models.ConsumerMasterModel
+
+@{
+    Layout = "";
+
+}
+
+<div class="col-md-6">
+    <div class="form-group">
+        <div class="box-header with-border">
+            <h3 class="box-title text-blue text-bold">Consumer Details</h3>
+            
+        </div>
+    </div>
+    <div class="box-body">
+        <div class="row">
+            <table class="table table-bordered table-hover" >
+                <thead>
+                    <tr>
+                        <th>Consumer Name</th>
+                        <th>Address</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>@Model.FirstName  @Model.LastName</td>
+                        <td>@Model.Address</td>
+                        <td>@Html.HiddenFor(model => Model.RefMeterSizeId)
+                            @Html.HiddenFor(model => Model.RefMeterTypeId)
+                            @Html.HiddenFor(model => Model.RefSupplyTypeId)
+                            @Html.HiddenFor(model => Model.RefSupplyCategoryId)</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+    jQuery(document).ready(function () {
+        debugger;
+    });
+</script>

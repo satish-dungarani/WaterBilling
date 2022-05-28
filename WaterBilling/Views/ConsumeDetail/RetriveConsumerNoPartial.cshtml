@@ -1,0 +1,18 @@
+﻿
+@{
+    Layout = "";
+}
+@Html.DropDownList("RefConsumerId", new SelectList((IEnumerable<SelectListItem>)ViewData["fillConsumerNo"], "Value", "Text"), "-----Select ConsumerNo-----", new { @class = "form-control select2 select2-hidden-accessible", style = "width: 100%;", tabindex = "-1" })
+
+<script type="text/javascript">
+    jQuery(document).ready(function () {
+        debugger;
+        $(".select2").select2();
+
+        $("#RefConsumerId").change(function () {
+            debugger;
+            RetriveConsumerDetail();
+        });
+    });
+</script>
+

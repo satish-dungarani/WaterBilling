@@ -1,0 +1,6 @@
+﻿
+@{
+    Layout = "";
+}
+@Html.DropDownList("OldEffectDate", new SelectList((IEnumerable<SelectListItem>)ViewData["fillEffectDate"], "Value", "Text"), "-----Select Date-----", new { @class = "form-control ", @style = "width: 100%;z-index: 2001 !important" })
+

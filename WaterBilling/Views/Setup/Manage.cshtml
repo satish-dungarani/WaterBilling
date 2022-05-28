@@ -1,0 +1,151 @@
+﻿@model WaterBilling.Models.MasterValueModel
+
+@{
+    ViewBag.Title = "Manage";
+}
+
+
+<div class="content-wrapper" style="min-height: 946px;">
+    <section class="content-header">
+        <h1>
+            Setup
+            <small></small>
+        </h1>
+        <ol class="breadcrumb">
+            <li><a href="#"><i class="fa fa-dashboard"></i>Home</a></li>
+            <li><a href="#">Setup</a></li>
+            <li class="active">Manage</li>
+        </ol>
+    </section>
+
+
+    <section class="content">
+        @using (Html.BeginForm("Save", "Setup", FormMethod.Post, new { id = "myform", @class = "form-horizontal", enctype = "multipart/form-data" }))
+        {
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="box box-primary">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">Quick Example</h3>
+                        </div>
+                        <div class="box-body">
+                            @Html.HiddenFor(Model => Model.refMasterID)
+                            @Html.HiddenFor(Model => Model.ID)
+                            @Html.HiddenFor(Model => Model.OrdNo)
+                            @Html.HiddenFor(Model => Model.IsActive)
+                            @Html.HiddenFor(Model => Model.InsUser)
+                            @Html.HiddenFor(Model => Model.InsDate)
+                            @Html.HiddenFor(Model => Model.InsTerminal)
+                            @Html.HiddenFor(Model => Model.UpdUser)
+                            @Html.HiddenFor(Model => Model.UpdDate)
+                            @Html.HiddenFor(Model => Model.UpdTerminal)
+
+                            <div>
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1">Name</label>
+                                        @Html.TextBoxFor(Model => Model.ValueName, new { @class = "form-control", @maxlength = 50 })
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label for="exampleInputPassword1">Short Name:</label>
+                                        @Html.TextBoxFor(Model => Model.ShortName, new { @class = "form-control", @maxlength = 10 })
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label for="exampleInputPassword1">Marathi Name:</label>
+                                        @Html.TextBoxFor(Model => Model.MarathiName, new { @class = "form-control", @maxlength = 50})
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="box-footer">
+                            <input id="btnSubmit" type="submit" value="Submit" class="btn btn-primary btnSubmit" onclick="return Validation();" />
+                            @*<button class="btn btn-primary" onclick="@("window.location.href='" + @Url.Action("index", "setup") + "'");">Cancel</button>*@
+                            @Html.ActionLink("cancel", "index", new { @class = "btn btn-primary" })
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        }
+    </section>
+</div>
+
+<script type="text/javascript">
+    jQuery(document).ready(function () {
+        $("#ValueName").focus();
+        SetMarathiFont("MarathiName");
+    });
+
+    function Validation() {
+
+        
+
+        var _ValueName = $("#ValueName");
+        var _ShortName = $("#ShortName");
+
+        if (_ValueName.val() == '' || _ValueName.val() == undefined) {
+            _ValueName.focus();
+            toastr["warning"]('Name can not left blank!');
+            return false;
+        }
+        else if (_ShortName.val() == '' || _ShortName.val() == undefined) {
+            _ShortName.focus();
+            toastr["warning"]('Short Name can not left blank!');
+            return false;
+        }
+
+
+        var _flg = "false";
+        $.ajax({
+            type: "POST",
+            async: false,
+            dataType: 'json',
+            //contentType: "application/json; charset=utf-8",
+            url: '@Url.Action("isValueExists", "Setup")',
+            data: { inID: $("#ID").val(), inValueName: _ValueName.val() },
+            dataType: "json",
+            beforeSend: function () { $("#ajaxLoader").show(); },
+            success: function (data) {
+                
+
+                var objResult = data.Result;
+                var objmsg = data.msg;
+
+                if (objResult == 'Success') {
+
+                    _flg = "true";
+                }
+                else if (objResult == 'Warning') {
+                    _ValueName.focus();
+                    toastr["warning"](objmsg);
+                    _flg = "false";
+                }
+                else if (objResult == 'Error') {
+                    toastr["warning"](objmsg);
+                    _flg = "false";
+                }
+                $("#ajaxLoader").hide();
+            },
+            error: function (result) {
+                
+                toastr["error"](result);
+                $("#ajaxLoader").hide();
+            },
+        });
+        if (_flg == "true") {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+</script>

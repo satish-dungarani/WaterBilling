@@ -1,0 +1,73 @@
+﻿@model WaterBillingDB.sp_ReceiptDetail_SelectWhere_Result
+
+@{
+    Layout = "";
+
+}
+
+<div class="col-md-12">
+    <div class="form-group">
+        <div class="box-header with-border">
+            <h3 class="box-title text-blue text-bold">Consumer Details</h3>
+
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box box-primary">
+
+                <div class="box-body">
+                    <table class="table table-bordered table-hover" style="width:100%" border="1px">
+                        <thead>
+                            <tr>
+                                <th>Receipt Number</th>
+                                <th>Receipt Date</th>
+                                <th>Consumer No</th>
+                                <th>Receipt Amount</th>
+                                <th>DPC Balance</th>
+                                <th>DPC Paid</th>
+                                <th>DPC Panding Bal</th>
+                                <th>Basic Balance</th>
+                                <th>Basic Paid</th>
+                                <th>Basic Panding Bal</th>
+                                <th>Print</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            <tr>
+                                @if (@Model.ConsumerNo != null)
+                                {
+                                    <td>@Model.ReceiptNo.ToString().PadLeft(6, '0')</td>
+                                    <td>@Model.ReceiptDate.ToString("dd/MM/yyyy")</td>
+                                    <td>@Model.ConsumerNo</td>
+                                    <td align="right">@Model.RecAmt</td>
+                                    <td>@Model.DPCBal</td>
+                                    <td>@Model.DPCPaid</td>
+                                    <td>@Model.DPCBalPending</td>
+                                    <td>@Model.BasicBal</td>
+                                    <td>@Model.BasicPaid</td>
+                                    <td>@Model.BasicBalPending</td>
+                                    <td align="center">
+                                        <a href="#">
+                                            <i class="fa fa-print"></i>
+                                        </a>
+                                    </td>
+                                }
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script type="text/javascript">
+    jQuery(document).ready(function () {
+        debugger;
+    });
+</script>
+

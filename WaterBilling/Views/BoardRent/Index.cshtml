@@ -1,0 +1,395 @@
+﻿@model WaterBilling.Models.BoardRentMasterModel
+
+@{
+    ViewBag.Title = "Board Rates";
+}
+
+<div class="content-wrapper" style="min-height: 946px;">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <h1>
+            Board Rates
+            <small></small>
+        </h1>
+        <ol class="breadcrumb">
+            <li><a href="#"><i class="fa fa-dashboard"></i>Home</a></li>
+            <li><a href="#">Setup</a></li>
+            <li class="active">Masters</li>
+        </ol>
+    </section>
+
+    <section class="content manageGrid">
+        @using (Ajax.BeginForm("generateNewDate", "BoardRent", new AjaxOptions { HttpMethod = "POST", OnBegin = "BrginProcess", OnSuccess = "loadPartialData", OnFailure = "MessagePrintOnFailed" }))
+        {
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="box box-primary">
+
+                        <div class="box-body">
+                            <div class="box-header with-border">
+                                <h3 class="box-title text-blue text-bold">Basic Information</h3>
+                            </div>
+
+                            <div class="col-md-10">
+
+                                <div class="col-xs-3">
+                                    <div class="form-group">
+                                        <label>Effect Date</label>
+                                        <div class="input-group">
+                                            @*<div class="input-group-addon">
+                                                <i class="fa fa-calendar"></i>
+                                            </div>*@
+                                            @Html.TextBoxFor(Model => Model.EffectDate, new { @class = "form-control ", placeholder = "dd/MMM/yyyy", @readonly = true })
+                                            <div class="input-group-addon">
+                                                <button id="btnOpen" type="button"><i class="fa fa-calendar"></i></button>
+                                                @*<i class="fa fa-calendar"></i>*@
+                                            </div>
+
+                                            @*@Html.TextBoxFor(Model => Model.EffectDate, "{0:dd/MM/yyyy}", new { @class = "form-control", @maxlength = 50, value = "", placeholder = "dd/MM/yyyy" })*@
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <input id="btnSubmit" type="submit" value="Load Rate" class="btn btn-primary btnSubmit" style="margin-top:24px" onclick="return Validation();" /> &nbsp; &nbsp;
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <div id="divDatePicker" class="modal extended-modal fade no-display" tabindex="-1" data-width="800" data-height="400" style="z-index: 2000 !important">
+                                        <div class="modal-dialog modal-sm">
+                                            <div class="modal-content">
+                                                <div class="modal-header bg-light-blue">
+
+                                                    <button type="button" class="close" id="btnClose" data-dismiss="modal" aria-hidden="true">
+                                                        &times;
+
+                                                    </button>
+                                                    <h4 class="modal-title">Select Effective Date</h4>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <div id="divcontent">
+                                                        <h5 class="modal-title">Select Exiest Date</h5>
+                                                        <div id="divEffectDate">
+                                                            @Html.Partial("DateSelectionPartial")
+                                                        </div>
+                                                        <br />
+                                                        <center>
+                                                            <b>-------------------OR-------------------</b>
+                                                        </center>
+                                                        <br />
+                                                        <h5 class="modal-title">Select New Date</h5>
+                                                        <input id="NewEffectDate" type="text" name="NewEffectDate" value="" class="form-control" maxlength="50" placeholder="dd/MM/yyyy" style="z-index: 2001 !important" />
+
+                                                        <input id="btnDone" type="button" value="Done" class="btn btn-primary" style="margin-top:24px" /> &nbsp; &nbsp;
+                                                        @*@Html.TextBoxFor("dtpEffectDate", "{0:dd/MM/yyyy}", new { @class = "form-control", @maxlength = 50, value = "", placeholder = "dd/MM/yyyy" })*@
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    @*<input id="btnOpen" type="button" value="Process" class="btn btn-primary" style="margin-top:24px" /> &nbsp; &nbsp;*@
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+        <div id="divBoardRent">
+            @Html.Partial("loadDataPartial")
+        </div>
+        @*@using (Html.BeginForm("Save", "BoardRent", FormMethod.Post, new { id = "myform", @class = "form-horizontal", enctype = "multipart/form-data" }))
+        {
+
+            
+            <input type="button" id="btnSetupNewRates" value="Setup New Rates" class="btn btn-primary" onclick="showDatePicker()" />
+            <div class="box-body" id="divAdd" style="display:none">
+
+                <div class="input-group">
+                    <div class="input-group-addon">
+                        <i class="fa fa-calendar"></i>
+                    </div>
+                    <input type="text" id="txtDate" class="form-control txtDate" data-inputmask="'alias': 'dd/mm/yyyy'" data-mask="">
+                    <input type="button" id="btnSaveNewRate" value="Create New Rate" class="btn btn-primary" onclick="saveDatePicker()" />
+                    <input type="button" id="btnCancelNewRate" value="Cancel" class="btn btn-primary" onclick="hideDatePicker()" />
+                </div>
+            </div>
+
+
+
+            <div class="row"> <div class="col-md-12"></div></div>
+            <div class="box box-primary">
+                <div class="box-header">
+                    @Html.DropDownList("EffectDate", new SelectList((IEnumerable<SelectListItem>)ViewData["fillEffectiveDate_BoardRate"], "Value", "Text"), new { @class = "form-control ddlsort" })
+                </div>
+
+                <div class="box-body">
+                    <div class="row">
+                        <div id="divBoardRent">
+                            @Html.Partial("loadDataPartial")
+                        </div>
+                    </div>
+
+                </div>
+                <div class="box-footer">
+                    <input id="btnSubmit" type="submit" value="Submit" class="btn btn-primary btnSubmit" />
+                </div>
+
+            </div>
+        }*@
+    </section>
+</div>
+
+<script type="text/javascript">
+    jQuery(document).ready(function () {
+        
+        SetDatePicker("NewEffectDate", true);
+
+        //open popup window code
+        $("#btnOpen").click(function () {
+            debugger;
+            RetriveDateList();
+            $("#divDatePicker").modal();
+        });
+
+        //function for close popup and retrive value
+        $("#btnDone").click(function () {
+
+            if ($("#NewEffectDate").val() != "" && $("#OldEffectDate").val() != "") {
+                toastr["warning"]('Please select any one date.');
+                return false;
+            }
+            else if ($("#NewEffectDate").val() == "" && $("#OldEffectDate").val() == "") {
+                toastr["warning"]('Please select any one date.');
+                return false;
+            }
+            else {
+
+                var _EffectDate = null;
+                if ($("#NewEffectDate").val() != "")
+                { _EffectDate = $("#NewEffectDate").val() }
+                else if ($("#OldEffectDate").val() != "")
+                { _EffectDate = $("#OldEffectDate").val() }
+                $("#EffectDate").val(moment(_EffectDate, "DD/MM/YYYY").format("DD/MMM/YYYY"));
+                $("#divDatePicker").modal('hide');
+            }
+            return true;
+        });
+        @*if ('@TempData["Success"]' != '')
+            toastr["success"]('@TempData["Success"]');*@
+        //
+        //$("#EffectDate").change(function () {
+        //    var _effectiveDate = this.value;
+        
+    });
+
+    //function for DateRange Picker
+    function SetDatePicker(_ControlName, _ClearBtn) {
+
+
+        $('input[name="' + _ControlName + '"]').datepicker({
+            showOnFocus: true,
+            format: 'dd/mm/yyyy',
+            todayHighlight: true,
+            autoclose: true,
+            todayBtn: true,
+            clearBtn: _ClearBtn,
+            position: "relative",
+
+
+            //defaultViewDate: { year: 2015, month: 01, day: 01 }
+        });
+        SetDefaultValue(_ControlName);
+    }
+
+    function SetDefaultValue(_ControlName) {
+        var _val = $("#" + _ControlName).val()
+        if (_val == "01-01-0001") {
+            _val = Date();
+        }
+        $('input[name="' + _ControlName + '"]').datepicker("setDate", _val)
+    }
+
+    function Validation() {
+        var _EffectDate = $("#EffectDate");
+        // To validate Effect Date
+        if (_EffectDate.val() == '' || _EffectDate.val() == undefined) {
+            _EffectDate.focus();
+            toastr["warning"]('Effect Date can not left blank!');
+            return false;
+        }
+        return true;
+    }
+
+    function editSession(_EffectiveDate) {
+
+
+
+        if (_EffectiveDate != undefined && _EffectiveDate != '') {
+            $.ajax({
+                type: 'post',
+                dataType: 'json',
+                cache: false,
+                url: '@Url.Action("editSession", "BoardRent")',
+                data: { pEffectiveDate: _EffectiveDate },
+                beforeSend: function () {
+                    $("#ajaxLoader").show();
+                },
+                success: function (response, textStatus, jqXHR) {
+                    if (response.Saved == "Yes") {
+                        loadPartialData();
+                    }
+                    else {
+                        toastr["warning"](response._Message);
+                    }
+                    $("#ajaxLoader").hide();
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+
+                    toastr["error"](errorThrown);
+                    $("#ajaxLoader").hide();
+                }
+            });
+        }
+        else
+            toastr["error"]('No such record found!');
+    }
+
+    function loadPartialData() {
+        $.ajax({
+            type: 'get',
+            //dataType: 'html',
+            cache: false,
+            url: '@Url.Action("loadDataPartial", "BoardRent")',
+            data: {},
+            //beforeSend: function () {
+            //    $("#ajaxLoader").show();
+            //},
+            success: function (response, textStatus, jqXHR) {
+                $("#ajaxLoader").hide()
+                //alert(response);
+                $("#divBoardRent").html("");
+                $("#divBoardRent").html(response);
+
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+
+                toastr["error"](errorThrown);
+                $("#ajaxLoader").hide();
+            }
+        });
+    }
+
+    function showDatePicker() {
+        $("#divAdd").show();
+    }
+
+    function saveDatePicker() {
+
+        var _dt = $("#txtDate").val();
+
+        if (_dt == null || _dt == "") {
+            toastr["warning"]('New effective date can not left blank!');
+            return;
+        }
+
+        $.ajax({
+            type: 'post',
+            dataType: 'json',
+            cache: false,
+            url: '@Url.Action("generateNewDate", "BoardRent")',
+            data: { pEffectiveDate: _dt },
+            beforeSend: function () {
+                $("#ajaxLoader").show();
+            },
+            success: function (response, textStatus, jqXHR) {
+                if (response.Saved == "Yes") {
+                    loadPartialData();
+                }
+                else {
+                    $("#txtDate").val("");
+                    toastr["warning"](response._Message);
+                }
+                $("#ajaxLoader").hide();
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+
+                toastr["error"](errorThrown);
+                $("#ajaxLoader").hide();
+            }
+        });
+    }
+
+    function hideDatePicker() {
+        $("#divAdd").hide();
+    }
+
+    //refresh effective date dropdownlist
+    function RetriveDateList() {
+        debugger;
+        $.ajax({
+
+            type: 'get',
+            datatype: 'html',
+            url: '@Url.Action("EffectDateListRetrive", "BoardRent")',
+            data: {},
+            cache: false,
+            beforeSend: function () {
+                debugger;
+                $("#ajaxLoader").show();
+            },
+            success: function (data) {
+                debugger;
+                $("#divEffectDate").html(data);
+                $("#ajaxLoader").hide();
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                debugger;
+                toastr["error"](errorThrown);
+                $("#ajaxLoader").hide();
+            }
+        });
+    }
+
+    //on begin operation
+    function BrginProcess() {
+        debugger;
+        $("#ajaxLoader").show();
+    }
+
+    // perform on success operation
+    function loadPartialData(response) {
+        debugger;
+
+        //$("#divEffectDate").html(ViewData["fillEffectDate"]);
+        @*$("OldEffectDate").html(@ViewData["fillEffectDate"].ToString());*@
+
+        $("#ajaxLoader").hide();
+        RetriveDateList();
+
+        $("#divBoardRent").html("");
+        $("#divBoardRent").html(response);
+
+        @*if ('@TempData["Success"]' != '')
+        toastr["success"]('@TempData["Success"]');
+    else if ('@TempData["Warning"]' != '')
+        toastr["warning"]('@TempData["Warning"]');*@
+
+        }
+
+    function MessagePrintOnFailed() {
+        //debugger;
+        toastr["warning"]('No Board Rent update.');
+        $("#ajaxLoader").hide();
+    }
+
+</script>
+<style>
+    .datepicker {
+        z-index: 2002 !important;
+    }
+</style>
+

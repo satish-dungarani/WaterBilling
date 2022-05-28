@@ -1,0 +1,307 @@
+﻿@model List<WaterBilling.Models.ReceiptDetailModel>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="box box-primary">
+
+            <div class="box-body">
+
+
+                <table class="table table-bordered table-hover" id="tblChequeStatus">
+                    <thead>
+                        <tr>
+                            <th>Consumer No</th>
+                            <th>Consumer Name</th>
+                            <th>Cheque/DD No</th>
+                            <th>Cheque/DD Date</th>
+                            <th>Bank Name</th>
+                            <th>Bank Branch</th>
+                            <th>Receipt Amount</th>
+                            <th>Cheque/DD Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+
+                            if (Model != null)
+                            {
+                                for (int i = 0; i < Model.Count; i++)
+                                {
+                                    <tr id="Row @i">
+                                        <td class="ConsumerNo" @i>@Model[i].ConsumerNo</td>
+                                        <td class="ConsumerName" @i>@Model[i].ConsumerName</td>
+                                        <td class="ChequeNo" @i>@Model[i].ChequeNo</td>
+                                        <td class="ChequeDate" @i>@Model[i].ChequeDate</td>
+                                        <td class="BankName" @i>@Model[i].BankName</td>
+                                        <td class="BankBranch" @i>@Model[i].BankBranch</td>
+                                        <td class="RecAmt" @i>@Model[i].RecAmt</td>
+                                        <td>@Html.CheckBoxFor(model => Model[i].ChqStatus, new { @class = "status" + @i })</td>
+
+                                        
+
+                                        <td style="display:none">
+                                            @Html.HiddenFor(x => Model[i].Id, new { @class = "Id" + @i })
+                                            @Html.HiddenFor(x => Model[i].IsChqStatus, new { @class = "IsChqStatus" + @i })
+                                            @Html.HiddenFor(x => Model[i].InsUser)
+                                            @Html.HiddenFor(x => Model[i].InsDate)
+                                            @Html.HiddenFor(x => Model[i].InsTerminal)
+                                            @Html.HiddenFor(x => Model[i].UpdUser)
+                                            @Html.HiddenFor(x => Model[i].UpdDate)
+                                            @Html.HiddenFor(x => Model[i].UpdTerminal)
+
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr><td colspan="7">No Record Found!</td></tr>
+                            }
+
+                        }
+                    </tbody>
+                </table>
+
+                <!--Cheque Bounce Detail Popup-->
+                <div id="divChqBounceDet" class="modal extended-modal fade no-display" tabindex="-1" data-width="800" data-height="400" style="z-index: 2000 !important">
+                    <div class="modal-dialog modal-sm">
+                        <div class="modal-content">
+                            <div class="modal-header bg-light-blue">
+
+                                <button type="button" class="close" id="btnClose" data-dismiss="modal" aria-hidden="true" onclick="OnClosed();" >
+                                    &times;
+
+                                </button>
+                                <h4 class="modal-title">Cheque Bounce Detail</h4>
+                            </div>
+                            <div class="modal-body">
+                                <div id="divcontent">
+                                    <div class="box-body">
+
+                                        <div class="row">
+                                            <input type="hidden" value="" id="Rowid" />
+
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label>Ref No</label>
+                                                    @Html.TextBox("ChqBounceRefNo",null, new { @class = "form-control" })
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label>Bounce Date</label>
+                                                    @Html.TextBox("ChqBounceDate", "{0:dd/Mm/yyyy}", new { @class = "form-control ChqBouncedate", placeholder = "dd/MM/yyyy" })
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label>Charges</label>
+                                                    @Html.TextBox("ChqBounceCharge", null, new { @class = "form-control" })
+                                                </div>
+                                            </div>
+
+                                            <div class="modal-footer">
+                                                <div class="form-group">
+                                                    <input id="btnDone" type="button" value="Done" class="btn btn-primary" style="margin-top:24px" onclick="return Validation();" /> &nbsp; &nbsp;
+                                                    @*@Html.TextBoxFor("dtpEffectDate", "{0:dd/MM/yyyy}", new { @class = "form-control", @maxlength = 50, value = "", placeholder = "dd/MM/yyyy" })*@
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        SetDatePicker("ChqBounceDate", true);
+
+
+        $("#tblChequeStatus tr").click(function () {
+            debugger;
+
+            var _RowId = this.id;
+            _RowId = _RowId.substring(4, _RowId.length)
+
+            debugger;
+            //SetDatePicker("[" + _RowId + "].ChqBounceDate", true);
+
+            if ($('input[name="[' + _RowId + '].ChqStatus"]')[0].checked && $("#IsChqStatus").val() == "PASS") {
+                debugger;
+                UpdateChequeStatus(_RowId);
+            }
+
+            else if ($('input[name="[' + _RowId + '].ChqStatus"]')[0].checked && $("#IsChqStatus").val() == "BOUNCE") {
+                $("#Rowid").val(_RowId);
+                $("#ChqBounceRefNo").val('');
+                _Date = $("#ChqBounceDate").val('');
+                _Charge = $("#ChqBounceCharge").val('')
+                $("#divChqBounceDet").modal({backdrop:"static"});
+
+            }
+            else {
+                debugger;
+                UpdateChequeStatus(_RowId);
+
+            }
+        });
+
+        //$("#btnDone").click(function () {
+
+        //    UpdateChequeStatus($("#Rowid").val());
+        //    $("#divChqBounceDet").modal('hide');
+        //    //$("input[name ='[" + _RowId + "].ChqBounceRefNo']").val('');
+        //    //$("input[name ='[" + _RowId + "].ChqBounceDate']").val('');
+        //    //$("input[name ='[" + _RowId + "].ChqBounceCharge']").val('');
+
+        //});
+
+    });
+
+    function OnClosed()
+    {
+
+        $("#divChqBounceDet").on("hide.bs.modal", function () {
+            $('input[name="[' + $("#Rowid").val() + '].ChqStatus"]')[0].checked = false;
+            
+        });
+    }
+
+    function Validation() {
+        //debugger;
+        var _RefNo = $("#ChqBounceRefNo");
+        // validation on ChqBounceRefNo
+        if (_RefNo.val() == '' || _RefNo.val() == undefined) {
+            $("#ChqBounceRefNo").focus();
+            toastr["warning"]('Cheque Bounce Ref No Can not left blank!')
+            return false;
+        }
+
+        var _BounceDate = $("#ChqBounceDate");
+        // validation on ChqBounceDate
+        if (_BounceDate.val() == '' || _BounceDate.val() == undefined) {
+            $("#ChqBounceDate").focus();
+            toastr["warning"]('Cheque Bounce Date Can not left blank!')
+            return false;
+        }
+
+        var _Charge = $("#ChqBounceCharge");
+        // validation on ChqBounceCharge
+        if (_Charge.val() == '' || _Charge.val() == undefined) {
+            $("#ChqBounceCharge").focus();
+            toastr["warning"]('Cheque Bounce Charge Can not left blank!')
+            return false;
+        }
+
+        UpdateChequeStatus($("#Rowid").val());
+        $("#divChqBounceDet").modal('hide');
+
+        return true;
+    }
+
+    //function for DateRange Picker
+    function SetDatePicker(_ControlName, _ClearBtn) {
+
+        $("#" + _ControlName).datepicker({
+            //$('input[name="' + _ControlName + '"]').datepicker({
+            showOnFocus: true,
+            format: 'dd/mm/yyyy',
+            todayHighlight: true,
+            autoclose: true,
+            todayBtn: true,
+            clearBtn: _ClearBtn,
+
+
+            //defaultViewDate: { year: 2015, month: 01, day: 01 }
+        });
+        SetDefaultValue(_ControlName);
+    }
+
+    function SetDefaultValue(_ControlName) {
+        debugger;
+        //var _val = $('input[name="' + _ControlName + '"]').val()
+        var _val = $("#" + _ControlName).val()
+        if (_val == "01-01-0001" || _val == "") {
+            _val = "";
+        }
+        //$('input[name="' + _ControlName + '"]').datepicker("setDate", _val)
+        $("#" + _ControlName).datepicker("setDate", _val)
+    }
+
+    function UpdateChequeStatus(_RowId) {
+        //debugger;
+
+        var _RefNo = null;
+        var _Date = null;
+        var _Charge = null;
+        if ($("#IsChqStatus").val() == "BOUNCE" && $('input[name="[' + _RowId + '].ChqStatus"]')[0].checked) {
+            _RefNo = $("#ChqBounceRefNo").val();
+            _Date = $("#ChqBounceDate").val();
+            _Charge = $("#ChqBounceCharge").val();
+        }
+
+        //var _obj = {
+        //    _ID: $(".Id" + _RowId).val(),
+        //    _isChecked: $(".status" + _RowId).val(),
+        //    _ChequeStatus: $("#IsChqStatus").val(),
+        //    _ChqBounceRefNo: _RefNo,
+        //    _ChqBounceDate: _Date,
+        //    _ChqBounceCharge: _Charge
+        //};
+        //debugger;
+
+        //var _objStringify = JSON.stringify(_obj);
+
+        $.ajax({
+            type: 'post',
+            datatype: 'json',
+            url: '@Url.Action("Save", "ChequeStatus")',
+            data: {
+                _ID: $(".Id" + _RowId).val(),
+                _isChecked: $('input[name="[' + _RowId + '].ChqStatus"]')[0].checked,
+                _ChequeStatus: $("#IsChqStatus").val(),
+                _ChqBounceRefNo: _RefNo,
+                _ChqBounceDate: _Date,
+                _ChqBounceCharge: _Charge
+            },
+            beforesend: function () {
+                debugger;
+                $("#ajaxLoader").show();
+            },
+            success: function (response) {
+                debugger;
+                $("#ajaxLoader").hide();
+                if (response._ChqStatus == "false") {
+                    $('input[name="[' + _RowId + '].ChqStatus"]')[0].checked = false;
+                }
+                //else if (response._ChqStatus == "true" && response._Status != "HOLD") {
+                //    $('input[name="[' + _RowId + '].ChqStatus"]')[0].checked = true;
+                //}
+                //else if (response._ChqStatus == "true" && response._Status == "HOLD") {
+                //    $('input[name="[' + _RowId + '].ChqStatus"]')[0].checked = false;
+                //}
+            },
+            error: function () {
+                debugger;
+                $("#ajaxLoader").hide();
+                $('input[name="[' + _RowId + '].ChqStatus"]')[0].checked = false;
+            },
+        });
+    }
+</script>
+
+<style>
+    .datepicker {
+        z-index: 2000 !important;
+    }
+</style>

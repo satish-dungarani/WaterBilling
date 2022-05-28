@@ -1,0 +1,251 @@
+﻿@model WaterBilling.Models.ConsumerMeterMasterModel
+
+@{
+    Layout = "";
+    ViewBag.Title = "Consumers Meter";
+}
+
+<div class="col-md-6">
+    <div class="form-group">
+        <div class="box-header with-border">
+            <h3 class="box-title text-blue text-bold">Details</h3>
+            <input id="btnAdd" type="button" value="Add New" class="btn btn-adn" onclick="return editSessionMeter(-1);" style="float:right; vertical-align:top; margin-top:auto" />
+        </div>
+    </div>
+    <div class="box-body">
+        <div class="row">
+            <table class="table table-bordered table-hover" id="tblMaster">
+                <thead>
+                    <tr>
+                        <th>Meter No.</th>
+                        <th>initial Reading</th>
+                        <th>Start Date</th>
+                        <th>In Active Date</th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+    jQuery(document).ready(function () {
+        
+    });
+
+    function editSessionMeter(_ID) {
+        
+        var _Result = null;
+        if ($("#MeterId").val() > 0 && _ID == -1) {
+            bootbox.confirm({
+                size: 'small',
+                message: "Are you sure to cancle edit mode?",
+                buttons: {
+
+                    'cancel': {
+                        label: 'No',
+                        className: 'btn-danger'
+                    },
+                    'confirm': {
+                        label: 'Yes',
+                        className: 'btn-default'
+                    }
+
+                },
+                callback: function (result) {
+                    if (result) {
+                        ManageRecord(_ID, result);
+                    }
+                }
+            })
+        }
+        else
+        {
+            ManageRecord(_ID, true);
+        }
+
+        
+    }
+
+    function ManageRecord(_ID, _Result)
+    {
+        
+        if (_ID != undefined && _ID != '' && _Result) {
+            $.ajax({
+                type: 'post',
+                dataType: 'json',
+                cache: false,
+                url: '@Url.Action("editSessionMeter", "Consumer")',
+                data: { pID: _ID },
+                beforeSend: function () {
+                    $("#ajaxLoader").show();
+                },
+                success: function (response, textStatus, jqXHR) {
+                    
+                    if (response.Saved == "Yes") {
+                        window.location.href = '@Url.Action("Manage", "Consumer")';
+
+                        localStorage.setItem("Meterclass", $("#liMeter").attr('class'));
+
+                        @*$.ajax({
+                            type: 'post',
+                            dataType: 'json',
+                            cache: false,
+                            url: '@Url.Action("SaveMeterDetail", "Consumer")',
+                            beforeSend: function () {
+                                $("#ajaxLoader").show();
+                            },
+                            success: function (response, textStatus, jqXHR) {
+                                toastr["success"]('@TempData["Success"]');
+                                $("#ajaxLoader").hide();
+                            },
+                            error: function (jqXHR, textStatus, errorThrown) {
+                                
+                                toastr["error"](errorThrown);
+                                $("#ajaxLoader").hide();
+                            }
+                        });*@
+
+                        }
+                    $("#ajaxLoader").hide();
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    
+                    toastr["error"](errorThrown);
+                    $("#ajaxLoader").hide();
+                }
+            });
+        }
+        //else
+        //    toastr["error"]('No such record found!');
+    }
+
+    function DeleteMeter(_ID) {
+
+        
+
+        if (_ID != undefined && _ID != '') {
+            bootbox.confirm({
+                size: 'small',
+                message: "Are you sure delete Consumer Meter?",
+                buttons: {
+
+                    'cancel': {
+                        label: 'Cancel',
+                        className: 'btn-default'
+                    },
+                    'confirm': {
+                        label: 'Delete',
+                        className: 'btn-danger'
+                    }
+
+                },
+                callback: function (result) {
+                    if (result) {
+
+                        $.ajax({
+                            type: 'post',
+                            dataType: 'json',
+                            cache: false,
+                            url: '@Url.Action("DeleteMeterDetail", "Consumer")',
+                            data: { delID: _ID },
+                            beforeSend: function () {
+                                $("#ajaxLoader").show();
+                            },
+                            success: function (response, textStatus, jqXHR) {
+                                
+                                //displaySuccess('');
+                                if (response._result == true) {
+                                    toastr["success"](response._Message);
+
+                                    fillGridMeter($("#Id").val());
+                                    $("#ajaxLoader").hide();
+                                }
+                            },
+                            error: function (jqXHR, textStatus, errorThrown) {
+                                
+                                //displayError(errorThrown);
+                                toastr["error"](response._Message);
+                                $("#ajaxLoader").hide();
+                            }
+                        });
+                    }
+                }
+            })
+        }
+        else
+            toastr["error"]('No Edit Consumer Meter.');
+    }
+
+
+    function fillGridMeter(_Id) {
+        
+        jQuery('#tblMaster').dataTable().fnDestroy();
+        var oTable = jQuery('#tblMaster').dataTable({
+            "bServerSide": true,
+            "sAjaxSource": '@Url.Action("AjaxHandlerMeter", "Consumer")',
+            "fnServerData": function (sSource, aoData, fnCallback) {
+                aoData.push({ "name": "_ConsumerId", "value": _Id });
+                $.ajax({
+                    "dataType": 'json',
+                    "type": "POST",
+                    "url": sSource,
+                    "data": aoData,
+                    "success": fnCallback
+                })
+            },
+            "bProcessing": false,
+            "responsive": true,
+            "sPaginationType": 'full_numbers',
+
+            "oLanguage": {
+                "sLengthMenu": "Show _MENU_ Rows",
+                "sSearch": "",
+                "oPaginate": {
+                    "sPrevious": "",
+                    "sNext": ""
+                }
+            },
+            "aaSorting": [[0, 'asc']],
+            "aoColumns": [
+
+                          { "sName": "MeterNo" },
+                          { "sName": "InitialReading" },
+                          { "sName": "StartDate" },
+                          { "sName": "InActiveDate" },
+
+                          {
+                              "sName": "Id",
+                              "sClass": "text-center",
+                              "sWidth": "10px",
+                              "bSearchable": false,
+                              "bSortable": false,
+                              "mRender": function (data, type, oObj) {
+                                  return "<i class='ui-tooltip fa fa-pencil' style='font-size: 18px; cursor:pointer;' onclick=\"editSessionMeter('" + oObj[6] + "')\"></i>";
+                              }
+                          },
+                          {
+                              "sName": "Id",
+                              "sClass": "text-center",
+                              "sWidth": "10px",
+                              "bSearchable": false,
+                              "bSortable": false,
+                              "mRender": function (data, type, oObj) {
+                                  //
+                                  return "<i class='ui-tooltip fa fa-trash-o' style='font-size: 18px; cursor:pointer;' data-original-title='Delete' onclick=\"DeleteMeter('" + oObj[6] + "')\"></i>";
+                              }
+                          }
+            ]
+        })
+        //$('#tblMaster_wrapper .dataTables_filter input').addClass("form-control input-sm").attr("placeholder", "Search");
+        //// modify table search input
+        //$('#tblMaster_wrapper .dataTables_length select').addClass("m-wrap small");
+        // modify table per page dropdown
+        //$('#tblMaster_wrapper .dataTables_length select').select2();
+    }
+
+</script>

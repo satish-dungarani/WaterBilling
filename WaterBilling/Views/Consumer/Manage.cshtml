@@ -1,0 +1,1034 @@
+﻿@model WaterBilling.Models.ConsumerMasterModel
+
+@{
+    ViewBag.Title = "Consumer";
+}
+
+@{
+    WaterBilling.Models.ConsumerMeterMasterModel _ConsumerMeter = ViewBag.ConsumerMeter as WaterBilling.Models.ConsumerMeterMasterModel;
+}
+<div class="content-wrapper" style="min-height: 946px;">
+    <section class="content-header">
+        <h1>
+            Consumer @Html.DisplayFor(Model => Model.ConsumerNo)  
+            <small></small>
+        </h1>
+        <ol class="breadcrumb">
+            <li><a href="#"><i class="fa fa-dashboard"></i>Home</a></li>
+            <li><a href="#">Setup</a></li>
+            <li class="active">Manage</li>
+        </ol>
+    </section>
+
+
+    <section class="content">
+
+        <div class="row">
+            <div class="col-md-12">
+                <!-- Custom Tabs -->
+                <div class="nav-tabs-custom">
+                    <ul class="nav nav-tabs">
+                        <li id="liConsumer" class="active"><a href="#Consumer" onclick="displaytab('Consumer');" data-toggle="tab" id="ConsumerTag">Consumer Details</a></li>
+                        <li id="liMeter" class=""><a href="#Meter" onclick="displaytab('Meter');" data-toggle="tab" id="MeterTag">Meter Details</a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="Consumer">
+
+                            @using (Ajax.BeginForm("Save", "Consumer", new AjaxOptions { HttpMethod = "POST", OnSuccess = "afterSuccess" }))
+                            {
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="box box-primary">
+
+                                            <div class="box-body">
+
+                                                @Html.HiddenFor(Model => Model.Id)
+                                                @Html.HiddenFor(Model => Model.InsUser)
+                                                @Html.HiddenFor(Model => Model.InsDate)
+                                                @Html.HiddenFor(Model => Model.InsTerminal)
+                                                @Html.HiddenFor(Model => Model.UpdUser)
+                                                @Html.HiddenFor(Model => Model.UpdDate)
+                                                @Html.HiddenFor(Model => Model.UpdTerminal)
+
+                                                <div class="col-md-6">
+                                                    @*Basic Information*@
+                                                    <div class="form-group">
+                                                        <div class="box-header with-border">
+                                                            <h3 class="box-title text-blue text-bold">Basic Information</h3>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="col-xs-6">
+                                                            <div class="form-group">
+                                                                <label>Consumer No.</label>
+                                                                @Html.TextBoxFor(Model => Model.ConsumerNo, new { @class = "form-control", @maxlength = 20 })
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xs-6">
+                                                            <div class="form-group">
+                                                                <label>Old Consumer No.</label>
+                                                                @Html.TextBoxFor(Model => Model.OldConsumerNo, new { @class = "form-control", @maxlength = 20 })
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="col-xs-4">
+                                                            <div class="form-group">
+                                                                <label>First Name</label>
+                                                                @Html.TextBoxFor(Model => Model.FirstName, new { @class = "form-control", @maxlength = 100 })
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xs-4">
+                                                            <div class="form-group">
+                                                                <label>Middle Name</label>
+                                                                @Html.TextBoxFor(Model => Model.MiddleName, new { @class = "form-control", @maxlength = 100 })
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xs-4">
+                                                            <div class="form-group">
+                                                                <label>Last Name</label>
+                                                                @Html.TextBoxFor(Model => Model.LastName, new { @class = "form-control", @maxlength = 50 })
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="col-xs-4">
+                                                            <div class="form-group">
+                                                                <label>First Name Marathi</label>
+                                                                @Html.TextBoxFor(Model => Model.FirstNameMarathi, new { @class = "form-control", @maxlength = 100, Styles = "font-family:Agra, font-style:normal," })
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xs-4">
+                                                            <div class="form-group">
+                                                                <label>Middle Name Marathi</label>
+                                                                @Html.TextBoxFor(Model => Model.MiddleNameMarathi, new { @class = "form-control", @maxlength = 100 })
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xs-4">
+                                                            <div class="form-group">
+                                                                <label>Last Name Marathi</label>
+                                                                @Html.TextBoxFor(Model => Model.LastNameMarathi, new { @class = "form-control", @maxlength = 50 })
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    @*Address Information*@
+                                                    <div class="form-group">
+                                                        <div class="box-header with-border">
+                                                            <h3 class="box-title text-blue text-bold">Address Information</h3>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="col-xs-12">
+                                                            <div class="form-group">
+                                                                <label>Address</label>
+                                                                <div class="in"></div>
+                                                                @Html.TextAreaFor(Model => Model.Address, new { @class = "form-control", @maxlength = 200 })
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="col-xs-6">
+                                                            <div class="form-group">
+                                                                <label>City Name</label>
+                                                                @Html.DropDownList("RefCityId", new SelectList((IEnumerable<SelectListItem>)ViewData["fillCityId"], "Value", "Text"), new { @class = "form-control ", @style = "width: 100%;" })
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-xs-6">
+                                                            <div class="form-group">
+                                                                <label>Pincode</label>
+                                                                @Html.TextBoxFor(Model => Model.PinCode, new { @class = "form-control", @maxlength = 6 })
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="col-xs-6">
+                                                            <div class="form-group">
+                                                                <label>State Name</label>
+                                                                @Html.DropDownList("RefStateId", new SelectList((IEnumerable<SelectListItem>)ViewData["fillStateId"], "Value", "Text"), new { @class = "form-control ", @style = "width: 100%;" })
+                                                            </div>
+                                                        </div>
+
+
+                                                        <div class="col-xs-6">
+                                                            <div class="form-group">
+                                                                <label>Country Name</label>
+                                                                @Html.DropDownList("RefCountryID", new SelectList((IEnumerable<SelectListItem>)ViewData["fillCountryId"], "Value", "Text"), new { @class = "form-control ", @style = "width: 100%;" })
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    @*Contact Informaton*@
+                                                    <div class="form-group">
+                                                        <div class="box-header with-border">
+                                                            <h3 class="box-title text-blue text-bold">Contact Information</h3>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="col-xs-6">
+                                                            <div class="form-group">
+                                                                <label>Mobile No.</label>
+                                                                <div class="input-group">
+                                                                    <div class="input-group-addon">
+                                                                        <i class="fa fa-mobile-phone"></i>
+                                                                    </div>
+                                                                    @Html.TextBoxFor(Model => Model.MobileNo, new { @class = "form-control", @maxlength = 10 })
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xs-6">
+                                                            <div class="form-group">
+                                                                <label>Email Id</label>
+                                                                <div class="input-group">
+                                                                    <div class="input-group-addon">
+                                                                        <i class="fa fa-envelope"></i>
+                                                                    </div>
+                                                                    @Html.TextBoxFor(Model => Model.EmailID, new { @class = "form-control", @maxlength = 50 })
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="col-xs-6">
+                                                            <div class="form-group">
+                                                                <label>Contact 1</label>
+                                                                <div class="input-group">
+                                                                    <div class="input-group-addon">
+                                                                        <i class="fa fa-phone"></i>
+                                                                    </div>
+                                                                    @Html.TextBoxFor(Model => Model.Contact1, new { @class = "form-control", @maxlength = 15 })
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xs-6">
+                                                            <div class="form-group">
+                                                                <label>Contact 2</label>
+                                                                <div class="input-group">
+                                                                    <div class="input-group-addon">
+                                                                        <i class="fa fa-phone"></i>
+                                                                    </div>
+                                                                    @Html.TextBoxFor(Model => Model.Contact2, new { @class = "form-control", @maxlength = 15 })
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="col-xs-6">
+                                                            <div class="form-group">
+                                                                <label>Family Member</label>
+                                                                @Html.TextBoxFor(Model => Model.FamilyMember, new { @class = "form-control", @maxlength = 2 })
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xs-6">
+                                                            <div class="form-group">
+                                                                <label>No of Connections</label>
+                                                                @Html.TextBoxFor(Model => Model.NoOfConnections, new { @class = "form-control", @maxlength = 2 })
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+
+                                                    @*Previous Information*@
+                                                    <div class="form-group">
+                                                        <div class="box-header with-border">
+                                                            <h3 class="box-title text-blue text-bold">Previous Information</h3>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="col-xs-6">
+                                                            <div class="form-group">
+                                                                <label>Current Bill Date</label>
+                                                                <div class="input-group">
+                                                                    <div class="input-group-addon">
+                                                                        <i class="fa fa-calendar"></i>
+                                                                    </div>
+                                                                    @Html.TextBoxFor(Model => Model.PrevBillDate, "{0:dd/MM/yyyy}", new { @class = "form-control", @maxlength = 50, value = "", placeholder = "dd/MMM/yyyy" })
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xs-6">
+                                                            <div class="form-group">
+                                                                <label>Current Reading Date</label>
+                                                                <div class="input-group">
+                                                                    <div class="input-group-addon">
+                                                                        <i class="fa fa-calendar"></i>
+                                                                    </div>
+                                                                    @Html.TextBoxFor(Model => Model.PrevReadingDate, "{0:dd/MM/yyyy}", new { @class = "form-control", @maxlength = 50, value = "", placeholder = "dd/MMM/yyyy" })
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="col-xs-4">
+                                                            <div class="form-group">
+                                                                <label>Current Reading</label>
+                                                                @Html.TextBoxFor(Model => Model.PrevReading, new { @class = "form-control", @maxlength = 10 })
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xs-4">
+                                                            <div class="form-group">
+                                                                <label>Outstanding DPC</label>
+                                                                @Html.TextBoxFor(Model => Model.PrevDPC, new { @class = "form-control", @maxlength = 10 })
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xs-4">
+                                                            <div class="form-group">
+                                                                <label>Outstanding Amount</label>
+                                                                @Html.TextBoxFor(Model => Model.PrevAmount, new { @class = "form-control", @maxlength = 10 })
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="col-xs-4">
+                                                            <div class="form-group">
+                                                                <label>Assessment Amout</label>
+                                                                @Html.TextBoxFor(Model => Model.PrevAssessmentAmt, new { @class = "form-control", @maxlength = 10 })
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xs-4">
+                                                            <div class="form-group">
+                                                                <label>Rent</label>
+                                                                @Html.TextBoxFor(Model => Model.PrevRent, new { @class = "form-control", @maxlength = 10 })
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xs-4">
+                                                            <div class="form-group">
+                                                                <label>Current Status</label>
+                                                                @Html.DropDownList("PrevRefStatusId", new SelectList((IEnumerable<SelectListItem>)ViewData["fillPrevStatus"], "Value", "Text"),"--Select Status--", new { @class = "form-control", @style = "width: 100%;" })
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <div class="box-header with-border">
+                                                            <h3 class="box-title text-blue text-bold">Other Information</h3>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="col-xs-6">
+                                                            <div class="form-group">
+                                                                <label>Zone Type</label>
+                                                                @Html.DropDownList("RefZoneId", new SelectList((IEnumerable<SelectListItem>)ViewData["fillZoneId"], "Value", "Text"), new { @class = "form-control ", @style = "width: 100%;" })
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-xs-6">
+                                                            <div class="form-group">
+                                                                <label>Camp</label>
+                                                                @Html.DropDownList("RefCampId", new SelectList((IEnumerable<SelectListItem>)ViewData["fillCampId"], "Value", "Text"), new { @class = "form-control ", @style = "width: 100%;" })
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="col-xs-12">
+                                                            <div class="form-group">
+                                                                <label>Reader Name</label>
+                                                                @Html.DropDownList("RefReaderId", new SelectList((IEnumerable<SelectListItem>)ViewData["fillReaderId"], "Value", "Text"), new { @class = "form-control ", @style = "width: 100%;" })
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="col-xs-6">
+                                                            <div class="form-group">
+                                                                <label>Average Consumption</label>
+                                                                @Html.TextBoxFor(Model => Model.AverageConsumption, new { @class = "form-control", @maxlength = 10 })
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-xs-6">
+                                                            <div class="form-group">
+                                                                <label>Deposite</label>
+                                                                @Html.TextBoxFor(Model => Model.Deposite, new { @class = "form-control", @maxlength = 10 })
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="col-xs-6">
+                                                            <div class="form-group">
+                                                                <label>Construction Type</label>
+                                                                @Html.DropDownList("RefConstructionType", new SelectList((IEnumerable<SelectListItem>)ViewData["fillConstructionType"], "Value", "Text"), new { @class = "form-control ", @style = "width: 100%;" })
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-xs-6">
+                                                            <div class="form-group">
+                                                                <label>DMA Type</label>
+                                                                @Html.DropDownList("RefDMAId", new SelectList((IEnumerable<SelectListItem>)ViewData["fillDMAId"], "Value", "Text"), new { @class = "form-control ", @style = "width: 100%;" })
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="col-xs-6">
+                                                            <div class="form-group">
+                                                                <label>Meter Size</label>
+                                                                @Html.DropDownList("RefMeterSizeId", new SelectList((IEnumerable<SelectListItem>)ViewData["fillMeterSizeId"], "Value", "Text"), new { @class = "form-control ", @style = "width: 100%;" })
+                                                            </div>
+                                                        </div>
+
+
+                                                        <div class="col-xs-6">
+                                                            <div class="form-group">
+                                                                <label>Meter Type</label>
+                                                                @Html.DropDownList("RefMeterTypeId", new SelectList((IEnumerable<SelectListItem>)ViewData["fillMeterTypeId"], "Value", "Text"), new { @class = "form-control ", @style = "width: 100%;" })
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="col-xs-6">
+                                                            <div class="form-group">
+                                                                <label>Supply Type</label>
+                                                                @Html.DropDownList("RefSupplyTypeId", new SelectList((IEnumerable<SelectListItem>)ViewData["fillSupplyTypeId"], "Value", "Text"), new { @class = "form-control ", @style = "width: 100%;" })
+                                                            </div>
+                                                        </div>
+
+
+                                                        <div class="col-xs-6">
+                                                            <div class="form-group">
+                                                                <label>Supply Category</label>
+                                                                @Html.DropDownList("RefSupplyCategoryId", new SelectList((IEnumerable<SelectListItem>)ViewData["fillSupplyCategoryId"], "Value", "Text"), new { @class = "form-control ", @style = "width: 100%;" })
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="col-xs-6">
+                                                            <div class="form-group">
+                                                                <label>Book No</label>
+                                                                @Html.TextBoxFor(Model => Model.BookNo, new { @class = "form-control", @maxlength = 20 })
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-xs-6">
+                                                            <div class="form-group">
+                                                                <label>Beat No</label>
+                                                                @Html.TextBoxFor(Model => Model.BeatNo, new { @class = "form-control", @maxlength = 20 })
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="col-xs-6">
+                                                            <div class="form-group">
+                                                                <label>Folio No</label>
+                                                                @Html.TextBoxFor(Model => Model.FolioNo, new { @class = "form-control", @maxlength = 10 })
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-xs-6">
+                                                            <div class="form-group">
+                                                                <div class="radio">
+                                                                    <label>
+                                                                        @Html.RadioButtonFor(Model => Model.OddEven, "O", new { @checked = "true" })
+                                                                        Odd
+                                                                    </label>
+                                                                </div>
+                                                                <div class="radio">
+                                                                    <label>
+                                                                        @Html.RadioButtonFor(Model => Model.OddEven, "E")
+                                                                        Even
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="col-xs-6">
+                                                            <div class="form-group">
+                                                                <label>Connection Date</label>
+                                                                <div class="input-group">
+                                                                    <div class="input-group-addon">
+                                                                        <i class="fa fa-calendar"></i>
+                                                                    </div>
+                                                                    @Html.TextBoxFor(Model => Model.ConnectionDate, "{0:dd/MM/yyyy}", new { @class = "form-control", @maxlength = 50, placeholder = "dd/MMM/yyyy" })
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-xs-6">
+                                                            <div class="form-group">
+                                                                <label>SancRef</label>
+                                                                @Html.TextBoxFor(Model => Model.SancRef, new { @class = "form-control", @maxlength = 50 })
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="col-xs-6">
+                                                            <div class="form-group">
+                                                                <label>Letter No</label>
+                                                                @Html.TextBoxFor(Model => Model.LetterNo, new { @class = "form-control", @maxlength = 50 })
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-xs-6">
+                                                            <div class="form-group">
+                                                                <label>Letter Date</label>
+                                                                <div class="input-group">
+                                                                    <div class="input-group-addon">
+                                                                        <i class="fa fa-calendar"></i>
+                                                                    </div>
+                                                                    @Html.TextBoxFor(Model => Model.LetterDate, "{0:dd/MM/yyyy}", new { @class = "form-control", @maxlength = 50, value = "", placeholder = "dd/MMM/yyyy" })
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="col-xs-6">
+                                                            <div class="form-group">
+                                                                <label>TR No</label>
+                                                                @Html.TextBoxFor(Model => Model.TRNo, new { @class = "form-control", @maxlength = 50 })
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xs-6">
+                                                            <div class="form-group">
+                                                                <label>TR Date</label>
+                                                                <div class="input-group">
+                                                                    <div class="input-group-addon">
+                                                                        <i class="fa fa-calendar"></i>
+                                                                    </div>
+                                                                    @Html.TextBoxFor(Model => Model.TRDate, "{0:dd/MM/yyyy}", new { @class = "form-control", @maxlength = 50, value = "", placeholder = "dd/MMM/yyyy" })
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="col-xs-6">
+                                                            <div class="form-group">
+                                                                <label>Plumber LicNo</label>
+                                                                @Html.TextBoxFor(Model => Model.PlumberLicNo, new { @class = "form-control", @maxlength = 50 })
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xs-6">
+                                                            <div class="form-group">
+                                                                <label>Plumber Name</label>
+                                                                @Html.TextBoxFor(Model => Model.PlumberName, new { @class = "form-control", @maxlength = 100 })
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="col-xs-6">
+                                                            <div class="form-group">
+                                                                <label>Plot Id</label>
+                                                                @Html.TextBoxFor(Model => Model.PlotId, new { @class = "form-control", @maxlength = 50 })
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-xs-6">
+                                                            <div class="form-group">
+                                                                <label>Disconnected Date</label>
+                                                                <div class="input-group">
+                                                                    <div class="input-group-addon">
+                                                                        <i class="fa fa-calendar"></i>
+                                                                    </div>
+                                                                    @Html.TextBoxFor(Model => Model.DisconnectedDate, "{0:dd/MM/yyyy}", new { @class = "form-control", @maxlength = 50, value = "", placeholder = "dd/MMM/yyyy" })
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="col-xs-6">
+                                                            <div class="form-group">
+                                                                <label>Disconnection Order No</label>
+                                                                @Html.TextBoxFor(Model => Model.DisconnectionOrderNo, new { @class = "form-control", @maxlength = 50 })
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xs-6">
+                                                            <div class="form-group">
+                                                                <label>Disconnection Order Date</label>
+                                                                <div class="input-group">
+                                                                    <div class="input-group-addon">
+                                                                        <i class="fa fa-calendar"></i>
+                                                                    </div>
+                                                                    @Html.TextBoxFor(Model => Model.DisconnectionOrderDate, "{0:dd/MM/yyyy}", new { @class = "form-control", @maxlength = 50, value = "", placeholder = "dd/MMM/yyyy" })
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="col-xs-6">
+                                                            <div class="form-group">
+                                                                <label>Reconnected Order No</label>
+                                                                @Html.TextBoxFor(Model => Model.ReconnectedOrderNo, new { @class = "form-control", @maxlength = 50 })
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xs-6">
+                                                            <div class="form-group">
+                                                                <label>ReConnected Date</label>
+                                                                <div class="input-group">
+                                                                    <div class="input-group-addon">
+                                                                        <i class="fa fa-calendar"></i>
+                                                                    </div>
+                                                                    @Html.TextBoxFor(Model => Model.ReConnectedDate, "{0:dd/MM/yyyy}", new { @class = "form-control", @maxlength = 50, value = "", placeholder = "dd/MMM/yyyy" })
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+                                            <div class="box-footer">
+                                                <input id="btnSubmit" type="submit" value="Submit" class="btn btn-primary btnSubmit" onclick="return Validation();" /> &nbsp; &nbsp;
+                                                @Html.ActionLink("cancel", "index", new { @class = "btn btn-primary" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div><!-- /.tab-pane -->
+                        <div class="tab-pane" id="Meter">
+
+                            @*@Html.Action("Manage", "ConsumerMeter")*@
+                            @if (_ConsumerMeter == null)
+                            {
+                                @Html.Partial("MeterDetailPartial", new WaterBilling.Models.ConsumerMeterMasterModel())
+                            }
+                            else
+                            {
+                                @Html.Partial("MeterDetailPartial", _ConsumerMeter)
+                            }
+
+
+                        </div><!-- /.tab-pane -->
+
+                    </div><!-- /.tab-content -->
+                </div><!-- nav-tabs-custom -->
+            </div><!-- /.col -->
+        </div>
+    </section>
+</div>
+
+<script type="text/javascript">
+
+    //var _MeterClass;
+    jQuery(document).ready(function () {
+        SetMarathiFont("FirstNameMarathi");
+        SetMarathiFont("MiddleNameMarathi");
+        SetMarathiFont("LastNameMarathi");
+        //if (localStorage.getItem("btnAdd") == "true")
+        //{
+        //    $("#btnAdd :input").attr('disabled', true);
+        //}
+
+
+        //set active class for tab
+        //if ($("#Id").val() > 0) {
+        //    if (localStorage.getItem("Meterclass") == "active") {
+        //        $("#liConsumer").removeClass("active");
+        //        $("#liMeter").addClass("active");
+        //        $("#Consumer").removeClass("active");
+        //        $("#Meter").addClass("active");
+        //        $("#MeterNo").focus();
+        //    }
+        //    else {
+        //        $("#liMeter").removeClass("active");
+        //        $("#liConsumer").addClass("active");
+        //        $("#Meter").removeClass("active");
+        //        $("#Consumer").addClass("active");
+        //        $("#ConsumerNo").focus();
+        //    }
+        //}
+        //else {
+            $("#liMeter").removeClass("active");
+            $("#liConsumer").addClass("active");
+            $("#Meter").removeClass("active");
+            $("#Consumer").addClass("active");
+            $("#ConsumerNo").focus();
+        //}
+
+
+        if ('@TempData["Success"]' != '')
+            toastr["success"]('@TempData["Success"]');
+
+        //$("#DOB").attr("data-inputmask='alias': 'dd/mm/yyyy' data-mask=''");
+        //$("[data-mask]").inputmask();
+        //$("#datemask2").inputmask("mm/dd/yyyy", { "placeholder": "mm/dd/yyyy" });
+
+        //Set Date Picker Popup
+        SetDatePicker("ConnectionDate", true);
+        SetDatePicker("DisconnectionOrderDate", true);
+        SetDatePicker("DisconnectedDate", true);
+        SetDatePicker("TRDate", true);
+        SetDatePicker("LetterDate", true);
+        SetDatePicker("PrevBillDate", true);
+        SetDatePicker("PrevReadingDate", true);
+        SetDatePicker("ReConnectedDate", true);
+
+        //Set Date Picker Popup
+        SetDatePicker("StartDate", true);
+        SetDatePicker("InActiveDate", true);
+
+        var _Id = $("#Id").val() == null ? 0 : $("#Id").val();
+        if (_Id == 0) {
+            var _Tag = $("#MeterTag");
+            $("#Meter :input").attr('disabled', true);
+        }
+        else {
+            $("#Meter :input").attr('disabled', false);
+        }
+
+
+
+        fillGridMeter(_Id);
+
+
+    });
+
+    function displaytab(_liName) {
+
+        if (liName == 'Meter') {
+            debugger;
+            $("#liConsumer").removeClass("active");
+            $("#liMeter").addClass("active");
+            $("#Consumer").removeClass("active");
+            $("#Meter").addClass("active");
+            $("#MeterNo").focus();
+        }
+        else {
+            debugger;
+            $("#liMeter").removeClass("active");
+            $("#liConsumer").addClass("active");
+            $("#Meter").removeClass("active");
+            $("#Consumer").addClass("active");
+            $("#ConsumerNo").focus();
+        }
+    }
+
+    function afterSuccess() {
+        debugger;
+        var _ID = $("#Id").val();
+        if (_ID == 0) {
+            _ID = -1;
+        }
+        if (_ID != undefined && _ID != '') {
+            debugger;
+            $.ajax({
+                type: 'post',
+                dataType: 'json',
+                cache: false,
+                url: '@Url.Action("editSession", "Consumer")',
+                data: { pID: _ID },
+                beforeSend: function () {
+                    $("#ajaxLoader").show();
+                },
+                success: function (response, textStatus, jqXHR) {
+                    debugger;
+                    if (response.Saved == "Yes") {
+                        window.location.href = '@Url.Action("manage", "Consumer")';
+                        toastr["success"]('@TempData["Success"]');
+                    }
+                    $("#ajaxLoader").hide();
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+
+                    toastr["error"](errorThrown);
+                    $("#ajaxLoader").hide();
+                }
+            });
+        }
+        else
+            toastr["error"]('No such record found!');
+    }
+
+    //generate success message
+    function SuccessMessage() {
+
+        toastr["success"]('@TempData["Success"]');
+        fillGridMeter(_Id);
+    }
+
+    //function for DateRange Picker
+    function SetDatePicker(_ControlName, _ClearBtn) {
+
+
+        $('input[name="' + _ControlName + '"]').datepicker({
+            showOnFocus: true,
+            format: 'dd/M/yyyy',
+            todayHighlight: true,
+            autoclose: true,
+            todayBtn: true,
+            clearBtn: _ClearBtn,
+
+
+            //defaultViewDate: { year: 2015, month: 01, day: 01 }
+        });
+        SetDefaultValue(_ControlName);
+    }
+
+    function SetDefaultValue(_ControlName) {
+        var _val = $("#" + _ControlName).val()
+        if (_val != "01-01-0001" || _val == "") {
+            _val;
+        }
+        else {
+            _val = "";
+        }
+        $('input[name="' + _ControlName + '"]').datepicker("setDate", _val)
+    }
+
+    function editSession(_ID) {
+
+        if (_ID != undefined && _ID != '') {
+            $.ajax({
+                type: 'post',
+                dataType: 'json',
+                cache: false,
+                url: '@Url.Action("editSession", "Consumer")',
+                data: { pID: _ID },
+                beforeSend: function () {
+                    $("#ajaxLoader").show();
+                },
+                success: function (response, textStatus, jqXHR) {
+
+                    if (response.Saved == "Yes") {
+                        window.location.href = '@Url.Action("manage", "Consumer")';
+                        localStorage.setItem("Meterclass", $("#liMeter").attr('class'));
+                    }
+                    $("#ajaxLoader").hide();
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+
+                    toastr["error"](errorThrown);
+                    $("#ajaxLoader").hide();
+                }
+            });
+        }
+        else
+            toastr["error"]('No such record found!');
+    }
+
+    function Validation() {
+
+
+        var _ConsumerNo = $("#ConsumerNo");
+        // To validate Consumer No
+        if (_ConsumerNo.val() == '' || _ConsumerNo.val() == undefined) {
+            _ConsumerNo.focus();
+            toastr["warning"]('Consumer No. can not left blank!');
+            return false;
+        }
+
+        var _FirstName = $("#FirstName");
+        // To validate user first name & last name
+        if (_FirstName.val() == '' || _FirstName.val() == undefined) {
+            _FirstName.focus();
+            toastr["warning"]('First Name can not left blank!');
+            return false;
+        }
+
+        var _LastName = $("#LastName");
+        // To validate user first name & last name
+        if (_LastName.val() == '' || _LastName.val() == undefined) {
+            _LastName.focus();
+            toastr["warning"]('Last Name can not left blank!');
+            return false;
+        }
+
+        var _Address = $("#Address");
+        // To validate address
+        if (_Address.val() == '' || _Address.val() == undefined) {
+            _Address.focus();
+            toastr["warning"]('Address can not left blank!');
+            return false;
+        }
+
+        var _Pincode = $("#PinCode");
+        // To validate pincode
+        if (_Pincode.val() == '' || _Pincode.val() == undefined) {
+            _Pincode.focus();
+            toastr["warning"]('Pincode can not left blank!');
+            return false;
+        }
+
+        var _FamilyMember = $("#FamilyMember");
+        // To validate family member
+        if (_FamilyMember.val() == '' || _FamilyMember.val() == undefined) {
+            _FamilyMember.focus();
+            toastr["warning"]('Family Member can not left blank!');
+            return false;
+        }
+
+        var _NoOfConnections = $("#NoOfConnections");
+        // To validate number of connection
+        if (_NoOfConnections.val() == '' || _NoOfConnections.val() == undefined) {
+            _NoOfConnections.focus();
+            toastr["warning"]('No of Connection can not left blank!');
+            return false;
+        }
+
+        var _RefZoneId = $("#RefZoneId");
+        // To validate zone type
+        if (_RefZoneId.val() == '' || _RefZoneId.val() == undefined) {
+            _RefZoneId.focus();
+            toastr["warning"]('Zone can not left blank!');
+            return false;
+        }
+
+        var _RefReaderId = $("#RefReaderId");
+        // To validate Reader Name
+        if (_RefReaderId.val() == '' || _RefReaderId.val() == undefined) {
+            _RefReaderId.focus();
+            toastr["warning"]('Reader Id can not left blank!');
+            return false;
+        }
+
+        var _AverageConsumption = $("#AverageConsumption");
+        // To validate average consumption
+        if (_AverageConsumption.val() == '' || _AverageConsumption.val() == undefined) {
+            _AverageConsumption.focus();
+            toastr["warning"]('Average Consumption can not left blank!');
+            return false;
+        }
+
+        var _RefConstructionType = $("#RefConstructionType");
+        // To validate construction type
+        if (_RefConstructionType.val() == '' || _RefConstructionType.val() == undefined) {
+            _RefConstructionType.focus();
+            toastr["warning"]('Construction Type can not left blank!');
+            return false;
+        }
+
+        var _RefDMAId = $("#RefDMAId");
+        // To validate DMA
+        if (_RefDMAId.val() == '' || _RefDMAId.val() == undefined) {
+            _RefDMAId.focus();
+            toastr["warning"]('DMA can not left blank!');
+            return false;
+        }
+
+        var _RefMeterSizeId = $("#RefMeterSizeId");
+        // To validate meter size
+        if (_RefMeterSizeId.val() == '' || _RefMeterSizeId.val() == undefined) {
+            _RefMeterSizeId.focus();
+            toastr["warning"]('Meter Size can not left blank!');
+            return false;
+        }
+
+        var _RefMeterTypeId = $("#RefMeterTypeId");
+        // To validate meter type
+        if (_RefMeterTypeId.val() == '' || _RefMeterTypeId.val() == undefined) {
+            _RefMeterTypeId.focus();
+            toastr["warning"]('Address can not left blank!');
+            return false;
+        }
+
+        var _RefSupplyTypeId = $("#RefSupplyTypeId");
+        // To validate supply type
+        if (_RefSupplyTypeId.val() == '' || _RefSupplyTypeId.val() == undefined) {
+            _RefSupplyTypeId.focus();
+            toastr["warning"]('Supply Type can not left blank!');
+            return false;
+        }
+
+        var _RefSupplyCategoryId = $("#RefSupplyCategoryId");
+        // To validate supply category
+        if (_RefSupplyCategoryId.val() == '' || _RefSupplyCategoryId.val() == undefined) {
+            _RefSupplyCategoryId.focus();
+            toastr["warning"]('Supply Categotry can not left blank!');
+            return false;
+        }
+
+        var _BookNo = $("#BookNo");
+        // To validate book no
+        if (_BookNo.val() == '' || _BookNo.val() == undefined) {
+            _BookNo.focus();
+            toastr["warning"]('Book No can not left blank!');
+            return false;
+        }
+
+        var _BeatNo = $("#BeatNo");
+        // To validate beat no
+        if (_BeatNo.val() == '' || _BeatNo.val() == undefined) {
+            _BeatNo.focus();
+            toastr["warning"]('Beat No can not left blank!');
+            return false;
+        }
+
+        var _FolioNo = $("#FolioNo");
+        // To validate folio no
+        if (_FolioNo.val() == '' || _FolioNo.val() == undefined) {
+            _FolioNo.focus();
+            toastr["warning"]('Folio No can not left blank!');
+            return false;
+        }
+
+        var _PlotId = $("#PlotId");
+        // To validate plot id
+        if (_PlotId.val() == '' || _PlotId.val() == undefined) {
+            _PlotId.focus();
+            toastr["warning"]('Plot Id can not left blank!');
+            return false;
+        }
+
+        var _flg = "false";
+        $.ajax({
+            type: "POST",
+            async: false,
+            dataType: 'json',
+            //contentType: "application/json; charset=utf-8",
+            url: '@Url.Action("isValueExists", "Consumer")',
+            data: { inID: $("#Id").val(), inValueName: _ValueName.val() },
+            //dataType: "json",
+            beforeSend: function () { $("#ajaxLoader").show(); },
+            success: function (data) {
+
+
+                var objResult = data.Result;
+                var objmsg = data.msg;
+
+                if (objResult == 'Success') {
+                    _flg = "true";
+                }
+                else if (objResult == 'Warning') {
+                    _ValueName.focus();
+                    toastr["warning"](objmsg);
+                    _flg = "false";
+                }
+                else if (objResult == 'Error') {
+                    toastr["warning"](objmsg);
+                    _flg = "false";
+                }
+                $("#ajaxLoader").hide();
+            },
+            error: function (result) {
+
+                toastr["error"](result);
+                $("#ajaxLoader").hide();
+            },
+        });
+        if (_flg == "true") {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+</script>

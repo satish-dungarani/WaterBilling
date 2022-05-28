@@ -1,0 +1,61 @@
+﻿@using WaterBilling.Models
+
+@model ReceiptDetailModel
+@{
+    Layout = "";
+}
+<div class="row">
+    @Html.HiddenFor(Model => Model.RefConsumerId, new { @class = "form-control" })
+    <div class="col-xs-12">
+        <div class="form-group">
+            <label>Consumer Name</label>
+            <br />
+            <span class="form-control">
+                @Html.DisplayFor(Model => Model.ConsumerName, new { @class = "form-control" })
+            </span>
+        </div>
+    </div>
+
+    <div class="col-xs-12">
+        <div class="form-group">
+            <label>Consumer Address</label>
+            <br />
+            <span class="form-control">
+                @Html.DisplayFor(Model => Model.ConsumerAddress, new { @class = "form-control" })
+            </span>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+
+    <div class="col-xs-12">
+        <div class="form-group">
+            <label>Due Date</label>
+            <br />
+            <span class="form-control">
+                @Html.DisplayFor(Model => Model.DueDate, new { @class = "form-control" })
+            </span>
+        </div>
+    </div>
+
+    <div class="col-xs-12">
+        <div class="form-group">
+            <label>Outstanding Amount</label>
+            <br />
+            <span class="form-control">
+                @Html.DisplayFor(Model => Model.BasicBal, new { @class = "form-control" })
+            </span>
+        </div>
+    </div>
+
+    <div class="col-xs-12">
+        <div class="form-group">
+            <label>Outstanding DPC</label>
+            <br />
+            <span class="form-control">
+                @Html.DisplayFor(Model => Model.DPCBal, new { @class = "form-control" })
+            </span>
+        </div>
+    </div>
+</div>

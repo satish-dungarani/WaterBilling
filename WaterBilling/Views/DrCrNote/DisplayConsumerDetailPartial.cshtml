@@ -1,0 +1,27 @@
+﻿@model WaterBilling.Models.DrCrNoteModel
+@{
+    Layout = "";
+}
+<div class="row">
+    @Html.HiddenFor(Model => Model.RefConsumerId, new { @class = "form-control" })
+
+    <div class="col-xs-3">
+        <div class="form-group">
+            <label>Consumer Name</label>
+            <br />
+            <span class="form-control">
+                @Html.DisplayFor(Model => Model.ConsumerName )
+            </span>
+        </div>
+    </div>
+
+    <div class="col-xs-3">
+        <div class="form-group">
+            <label>Consumer Address</label>
+            <br />
+            <span class="form-control">
+                @Html.DisplayFor(Model => Model.ConsumerAddress)
+            </span>
+        </div>
+    </div>
+</div>

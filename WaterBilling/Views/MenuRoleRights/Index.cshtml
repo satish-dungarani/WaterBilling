@@ -1,0 +1,105 @@
+﻿@{
+    ViewBag.Title = "Consumers Rate";
+}
+<div class="content-wrapper" style="min-height: 946px;">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <h1>
+            Consumer Rate
+            <small></small>
+        </h1>
+        <ol class="breadcrumb">
+            <li><a href="#"><i class="fa fa-dashboard"></i>Home</a></li>
+            <li><a href="#">Setup</a></li>
+            <li class="active">Masters</li>
+        </ol>
+    </section>
+
+    <section class="content">
+        @using (Ajax.BeginForm("Save", "MenuRoleRights", new AjaxOptions { HttpMethod = "POST", OnBegin = "", OnSuccess = "SuccessFunction", OnFailure = "MessagePrintOnFailed" }))
+        {
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="box box-primary">
+
+                        <div class="box-body">
+                            <div class="box-header with-border">
+                                <h3 class="box-title text-blue text-bold">Basic Information</h3>
+                            </div>
+
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label>User Role</label>
+                                    @Html.DropDownList("RefRoleId", new SelectList((IEnumerable<SelectListItem>)ViewData["fillUserRole"], "Value", "Text"), "-----Select Role-----", new { @class = "form-control", @style = "width: 100%;" })
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <input id="btnSubmit" type="submit" value="Save" class="btn btn-primary btnSubmit" style="margin-top:24px" onclick="return Validation();" /> &nbsp; &nbsp;
+                                    <input id="btnDiscard" type="button" value="Discard" class="btn btn-primary btnSubmit" style="margin-top:24px" onclick="RetrieveRightsData();" /> &nbsp; &nbsp;
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="divRights">
+                @Html.Partial("LoadMenuRoleRightsPartial")
+            </div>
+        }
+    </section>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $("#RefRoleId").on("change", function () {
+            RetrieveRightsData();
+        });
+
+    });
+
+    function RetrieveRightsData()
+    {
+        var _RoleId = $("#RefRoleId").val()
+        if (_RoleId != "") {
+            $.ajax({
+                type: 'get',
+                datatype: 'html',
+                url: '@Url.Action("Select","MenuRoleRights")',
+                data: { pRefRoleId: _RoleId },
+                beforesend: function () {
+                    $("ajaxloader").show();
+                },
+                success: function (response) {
+                    $("ajaxloader").hide();
+                    $("#divRights").html(response);
+
+                },
+                error: function () {
+                    $("ajaxloader").hide();
+                }
+            });
+        }
+        else {
+            $("#divRights").html('');
+        }
+        $("#RefRoleId").prop('disabled', false);
+    }
+
+    function SuccessFunction(response)
+    {
+        $("#divRights").html(response);
+        toastr["success"]('Rights successfully allocated!');
+        $("#RefRoleId").prop('disabled', false);
+    }
+
+    function MessagePrintOnFailed(response)
+    {
+        $("#divRights").html(response);
+        toastr["warning"]('Rights not success fully allocated!');
+        $("#RefRoleId").prop('disabled', false);
+    }
+
+</script>

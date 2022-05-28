@@ -1,0 +1,495 @@
+﻿@using WaterBillingDB;
+
+@model WaterBilling.Models.DrCrNoteModel
+
+@{
+    ViewBag.Title = ViewBag.Header;
+}
+
+<div class="content-wrapper" style="min-height: 946px;">
+    <section class="content-header">
+        <h1>
+            @ViewBag.Header
+            <small></small>
+        </h1>
+        <ol class="breadcrumb">
+            <li><a href="#"><i class="fa fa-dashboard"></i>Home</a></li>
+            <li><a href="#">DrCrNote</a></li>
+            <li class="active">Manage</li>
+        </ol>
+    </section>
+    <section class="content">
+
+        <div class="row">
+            <div class="col-md-12">
+                <!-- Custom Tabs -->
+                <div class="nav-tabs-custom">
+                    
+                    @*@using (Ajax.BeginForm("Save", "DrCrNote", null, new AjaxOptions { HttpMethod = "POST", UpdateTargetId = "", OnBegin = "HandleBegin", OnSuccess = "HandleSuccess", OnFailure = "HandleFailure" }, new { @id = "FrmDrCrNote" , enctype = "multipart/form-data"}))*@
+                    @using (Html.BeginForm("Save", "DrCrNote", FormMethod.Post, new { enctype = "multipart/form-data", id = "FrmDrCrNote" }))
+                    {
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="box box-primary">
+
+                                    <div class="box-body">
+                                        @Html.HiddenFor(Model => Model.Id)
+                                        @*@Html.HiddenFor(Model => Model.PdfFile)*@
+                                        @Html.HiddenFor(Model => Model.NoteType)
+                                        @Html.HiddenFor(Model => Model.InsUser)
+                                        @Html.HiddenFor(Model => Model.InsDate)
+                                        @Html.HiddenFor(Model => Model.InsTerminal)
+                                        @Html.HiddenFor(Model => Model.UpdUser)
+                                        @Html.HiddenFor(Model => Model.UpdDate)
+                                        @Html.HiddenFor(Model => Model.UpdTerminal)
+
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <div class="box-header with-border">
+                                                    <h3 class="box-title text-blue text-bold">Basic Information</h3>
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-xs-3">
+                                                    <div class="form-group">
+                                                        <label>Serial No</label>
+                                                        @Html.LabelFor(Model => Model.SerialNo, "0", new { @class = "form-control", @maxlength = 2 })
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-xs-3">
+                                                    <div class="form-group">
+                                                        <label>Note Date</label>
+                                                        <div class="input-group">
+                                                            <div class="input-group-addon">
+                                                                <i class="fa fa-calendar"></i>
+                                                            </div>
+                                                            @Html.TextBoxFor(Model => Model.NoteDate, "{0:dd/MM/yyyy}", new { @class = "form-control", @readonly = true })
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-xs-3">
+                                                    <div class="form-group">
+                                                        <label>Upload Document</label>
+                                                        @*<input type="file" name="files" id="files" accept="application/pdf"/>*@
+                                                        @*<input type="file" name="UpPdfFile" id="UpPdfFile" value=" " />*@
+                                                        @Html.TextBoxFor(Model => Model.file, new { type = "file" })
+                                                    </div>
+                                                </div>
+
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-xs-3">
+                                                    <div class="form-group">
+                                                        <label>Consumer No</label>
+                                                        @Html.TextBoxFor(Model => Model.ConsumerNo, new { @class = "form-control" })
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-xs-3">
+                                                    <div class="form-group">
+                                                        <label>Amount</label>
+                                                        @Html.TextBoxFor(Model => Model.Amount, new { @class = "form-control" })
+                                                    </div>
+                                                </div>
+
+                                                <div id="divConsumerDetail">
+                                                    @Html.Partial("DisplayConsumerDetailPartial")
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-xs-3">
+                                                    <div class="form-group">
+                                                        <label>Reason Type</label>
+                                                        @Html.DropDownList("RefReasonId", new SelectList((IEnumerable<SelectListItem>)ViewData["fillReason"], "Value", "Text"), "-----Select Reason-----", new { @class = "form-control", @style = "width: 100%;" })
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-xs-3">
+                                                    <div class="form-group">
+                                                        <label>Narration</label>
+                                                        @Html.TextAreaFor(Model => Model.Narration, new { @class = "form-control" })
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-xs-3">
+                                                    <div class="form-group">
+                                                        <label>Order No</label>
+                                                        @Html.TextBoxFor(Model => Model.OrderNo, new { @class = "form-control" })
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-xs-3">
+                                                    <div class="form-group">
+                                                        <label>Order Date</label>
+                                                        @Html.TextBoxFor(Model => Model.OrderDate, new { @class = "form-control", placeholder = "dd/MMM/yyyy" })
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+                                    <div class="box-footer">
+                                        <input id="btnSubmit" type="submit" value="Save & Print" class="btn btn-primary btnSubmit" onclick="return Validation();" /> &nbsp; &nbsp;
+                                        <input id="btnCancle" type="button" value="Cancle" class="btn btn-primary" onclick="ClearAllDetail();" /> &nbsp; &nbsp;
+                                    </div>
+
+
+                                </div>
+                            </div>
+                        </div>
+
+
+                    }
+
+                    <div id="divLoadLastTwoDrCrNote">
+                        @Html.Partial("LoadLastTwoDrCrNotePartial", new List<sp_DrCrNote_SelectWhere_Result>())
+                    </div>
+
+                </div>
+            </div><!-- /.col -->
+        </div>
+    </section>
+</div>
+
+<script type="text/javascript">
+    jQuery(document).ready(function () {
+        debugger;
+
+        //$("#FrmDrCrNote").ajaxForm();
+
+
+
+        SetDatePicker("OrderDate", true);
+
+        $("#NoteDate").val(moment().format('DD/MMM/YYYY'));
+
+        $("#Amount").focusout(function () {
+            CheckNgVe("#Amount", 'Amount can not enter in -Negative or Zero.');
+        });
+
+        $("#Amount").keyup(function (e) {
+            debugger;
+            if ((e.keyCode >= 48 && e.keyCode <= 57) || (e.keyCode >= 96 && e.keyCode <= 105) || e.keyCode == 46 || e.keyCode == 144 || e.keyCode == 8 || e.keyCode == 110
+                || e.keyCode == 39 || (e.keyCode >= 35 && e.keyCode <= 37) || e.keyCode == 16 || e.keyCode == 17 || e.keyCode == 9)
+            { }
+            else {
+                $("#Amount").val('0');
+                $("#Amount").focus();
+                toastr["warning"]('Amount only allow numeric value!')
+            }
+        });
+
+        $("#ConsumerNo").focusout(function () {
+            debugger;
+            RetriveConsumer();
+        });
+
+        $("#FrmDrCrNote").submit(function (evnt) {
+            debugger;
+            evnt.preventDefault();
+            var $form = $(this);
+            var formdata = new FormData();
+            //var formdata = $(this);
+            formdata.append("PdfFileData", document.getElementById("file").files[0]);
+            //if (!$form.valid()) return;
+            debugger;
+            $.ajax({
+                
+                type: $form.prop('method'),
+                url: '@Url.Action("UpLoadFile","DrCrNote")',
+                data: formdata,
+                dataType: 'json',
+                //traditional: true,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    debugger;
+                    if (response.Result == "Success")
+                    {
+                        SaveDrCrNote($form);
+                    }
+                    else {
+                        toastr["warning"](response.Message);
+                    }
+                },
+                error: function(){
+                    debugger;
+                }
+            })
+        });
+
+        function SaveDrCrNote($form)
+        {
+            $.ajax({
+
+                type: $form.prop('method'),
+                url: $form.prop('action'),
+                data: $form.serialize(),
+                dataType: 'html',
+                traditional: true,
+                beforeSend: function () {
+                    debugger;
+                },
+                success: function (response) {
+                    debugger;
+                    //window.print();
+                    //$("#divConsumerDetail").html('');
+                    $("#divLoadLastTwoDrCrNote").html('');
+                    $("#divLoadLastTwoDrCrNote").html(response);
+
+                    ClearAllDetail();
+
+                    RetriveConsumer();
+                },
+                error: function (ex, st, th) {
+                    debugger;
+                }
+            });
+        }
+
+        //$.post()
+        //debugger;
+        //$("#FrmDrCrNote").on('submit:success', function (response) {
+        //    debugger;
+        //    //window.print();
+        //    $("#divConsumerDetail").html('');
+        //    $("#divLoadLastTwoDrCrNote").html('');
+        //    $("#divLoadLastTwoDrCrNote").html(response);
+
+        //    ClearAllDetail();
+        //});
+
+        debugger;
+        //$("#FrmDrCrNote").submit(
+        //    {
+        //        success: function (response) {
+        //            debugger;
+        //            //window.print();
+        //            $("#divConsumerDetail").html('');
+        //            $("#divLoadLastTwoDrCrNote").html('');
+        //            $("#divLoadLastTwoDrCrNote").html(response);
+
+        //            ClearAllDetail();
+        //        }
+        //    });
+
+        //window.onload = function () {
+        //    debugger;
+        //    document.getElementById("FrmDrCrNote").onsubmit = function () {
+        //        debugger;
+        //        var formdata = new FormData();//FormData Object
+        //        //var formdata = $(this);
+        //        var fileInput = document.getElementById("PdfFile");
+        //        formdata.append("PdfFileData", document.getElementById("file").files[0]);
+        //        //Interacting through each files selected in fileinput
+        //        //for (var i = 0; i < fileInput.files.length; i++) {
+        //        //    //appending each file to formdata object
+        //        //    formdata.append(fileInput.files[i].name, fileInput.files[i]);
+        //        //}
+
+        //        //creating an XMLHttpRequest and sending
+        //        var xhr = new XMLHttpRequest();
+        //        xhr.open('POST', '/DrCrNote/UpLoadFile');
+        //        //xhr.setRequestHeader("PdfFile",document.getElementById("PdfFile").files[0]);
+
+        //        xhr.send(formdata);
+        //        //xhr.onreadystatechange = function () {
+        //        //    if (xhr.readyState == 4 && xhr.status == 200) {
+        //        //        toastr["warning"](xhr.responseText);
+        //        //    }
+        //        }
+        //        //return false;
+        //    }
+        //};
+
+    });
+
+
+    //$(document).ajaxSuccess(function (event, xhr, opt) {
+    //    debugger;
+    //});
+
+
+
+    //check value is -ve or not
+    function CheckNgVe(_ControlId, _Msg) {
+        if ($(_ControlId).val() <= 0) {
+            $(_ControlId).focus();
+            toastr["warning"](_Msg)
+        }
+    }
+
+    //function for DateRange Picker
+    function SetDatePicker(_ControlName, _ClearBtn) {
+        debugger;
+        $('input[name="' + _ControlName + '"]').datepicker({
+            showOnFocus: true,
+            format: 'dd/M/yyyy',
+            todayHighlight: true,
+            autoclose: true,
+            todayBtn: true,
+            clearBtn: _ClearBtn,
+
+
+            //defaultViewDate: { year: 2015, month: 01, day: 01 }
+        });
+        SetDefaultValue(_ControlName);
+    }
+
+    function SetDefaultValue(_ControlName) {
+        var _val = $("#" + _ControlName).val()
+        $('input[name="' + _ControlName + '"]').datepicker("setDate", Date())
+        if (_val == '' || _val == '01-01-0001') {
+            _val = ''
+        }
+        $('input[name="' + _ControlName + '"]').datepicker("setDate", _val)
+    }
+
+    function Validation() {
+
+        //debugger;
+
+        var _ConsumerNo = $("#ConsumerNo").val();
+        // To validate user Collection Center
+        if (_ConsumerNo == '' || _ConsumerNo == undefined) {
+            $("#ConsumerNo").focus();
+            toastr["warning"]('Consumer No can not left blank!');
+            return false;
+        }
+
+        var _Consumer = $("#RefConsumerId").val();
+        // To validate user Collection Center
+        if (_Consumer == "" || _Consumer == undefined || _Consumer == 0) {
+            $("#RefConsumerId").focus();
+            toastr["warning"]('Consumer No enterd wrong!');
+            return false;
+        }
+
+        var _Amount = $("#Amount").val();
+        // To validate user Collection Center
+        if (_Amount == '' || _Amount == undefined || _Amount == 0) {
+            $("#Amount").focus();
+            toastr["warning"]('Amount can not left blank!');
+            return false;
+        }
+
+        return true;
+    }
+
+    function RetriveConsumer() {
+        var _ConsumerNo = $("#ConsumerNo").val()
+        debugger;
+        //if (_ConsumerNo != "") {
+            
+            $.ajax({
+                type: 'get',
+                datatype: 'html',
+                url: '@Url.Action("DisplayConsumerDetailPartial", "DrCrNote")',
+                data: { pConsumerNo: _ConsumerNo },
+                beforesend: function () {
+                    debugger;
+                    $("#ajaxLoader").show();
+                },
+                success: function (response) {
+                    debugger;
+                    $("#ajaxLoader").hide();
+                    $("#divConsumerDetail").html('');
+                    $("#divConsumerDetail").html(response);
+                },
+                error: function (jxex) {
+                    debugger;
+                    $("#ajaxloader").hide();
+                    toastr["error"](jxex);
+                }
+
+            });
+        //}
+        //else {
+
+        //}
+    }
+
+    @*function RetriveConsumerDetail() {
+        var _ConsumerId = $("#RefConsumerId").val()
+        if (_ConsumerId != "") {
+            debugger;
+            $.ajax({
+                type: 'get',
+                datatype: 'html',
+                url: '@Url.Action("ConsumerDetailPartial", "ConsumeDetail")',
+                data: { pId: _ConsumerId },
+                beforesend: function () {
+                    //debugger;
+                    $("#ajaxLoader").show();
+                },
+                success: function (response) {
+                    //debugger;
+                    $("#ajaxLoader").hide();
+                    $("#divConsumerDetail").html('');
+                    $("#divConsumerDetail").html(response);
+                },
+                error: function (jxex) {
+                    //debugger;
+                    $("#ajaxloader").hide();
+                    toastr["error"](jxex);
+                }
+
+            });
+        }
+        else {
+            $("#divConsumerDetail").html('');
+        }
+    }*@
+
+    function HandleBegin(request) {
+        debugger;
+        
+        //$("#PdfFile").val(document.getElementById("UpPdfFile").files[0]);
+        var formdata = new FormData();
+        formdata.append("PdfFileData", document.getElementById("file").files[0]);
+    }
+
+    function HandleSuccess(response) {
+        debugger;
+        //window.print();
+        $("#divConsumerDetail").html('');
+        $("#divLoadLastTwoDrCrNote").html('');
+        $("#divLoadLastTwoDrCrNote").html(response);
+
+        ClearAllDetail();
+    }
+
+    function HandleFailure() {
+        debugger;
+
+    }
+
+    function ClearAllDetail() {
+        try {
+            $("#ConsumerNo").val('');
+            $("#Amount").val(0);
+            $("#RefReasonId").val('');
+            $("#Narration").val('');
+            $("#OrderNo").val('');
+            $("#OrderDate").val('');
+            $("#RefConsumerId").val('');
+            $("#ConsumerName").val('');
+            $("#ConsumerAddress").val('');
+            $("#ConsumerNo").focus();
+            $("#file").val('');
+        } catch (e) {
+
+        }
+    }
+
+
+
+</script>

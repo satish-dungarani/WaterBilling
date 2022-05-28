@@ -1,0 +1,409 @@
+﻿@model WaterBilling.Models.UserMasterModel
+
+@{
+    ViewBag.Title = "Users";
+}
+<div class="content-wrapper" style="min-height: 946px;">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <h1>
+            User
+            <small></small>
+        </h1>
+        <ol class="breadcrumb">
+            <li><a href="#"><i class="fa fa-dashboard"></i>Home</a></li>
+            <li><a href="#">Setup</a></li>
+            <li class="active">Masters</li>
+        </ol>
+    </section>
+
+    <section class="content manageGrid">
+        <div class="btn-group">
+            @*<input type="button" id="btnCreate" value="Create New" class="btn btn-block btn-primary btn-sm btnCreate" onclick="editSession(@pr)" />*@
+            @Html.ActionLink("Create New", "Manage", null, new { @class = "btn btn-block btn-primary btn-sm btnCreate" })
+        </div>
+        <div class="row"> <div class="col-md-12"></div></div>
+        <div class="box box-primary">
+            <div class="box-header">
+
+            </div>
+            <div class="box-body">
+                <div class="row">
+                    <table class="table table-bordered table-hover" id="tblMaster">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>User Type</th>
+                                <th>Contacts</th>
+                                <th>Email ID</th>
+                                <th>User Name</th>
+                                <th>User Role</th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+            @Html.Partial("UserRegisterPartial")
+        </div>
+    </section>
+</div>
+
+<script type="text/javascript">
+    jQuery(document).ready(function () {
+
+        $("#divRegister").modal('hide');
+
+        if ('@TempData["Success"]' != '')
+            toastr["success"]('@TempData["Success"]');
+        else if ('@TempData["Warning"]' != '')
+            toastr["warning"]('@TempData["Warning"]');
+
+        fillGrid();
+    });
+
+    function editSession(_ID) {
+
+        if (_ID != undefined && _ID != '') {
+            debugger;
+            $.ajax({
+
+                type: 'post',
+                dataType: 'json',
+                cache: false,
+                url: '@Url.Action("editSession", "user")',
+                data: { pID: _ID },
+                beforeSend: function () {
+                    debugger;
+                    $("#ajaxLoader").show();
+                },
+                success: function (response, textStatus, jqXHR) {
+                    debugger;
+                    if (response.Saved == "Yes") {
+                        window.location.href = '@Url.Action("manage", "user")';
+                    }
+                    else
+                    {
+                        toastr["warning"](response._Message)
+                    }
+                    $("#ajaxLoader").hide();
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+
+                    toastr["warning"](errorThrown);
+                    $("#ajaxLoader").hide();
+                }
+            });
+        }
+        else
+            toastr["error"]('No such record found!');
+    }
+
+    function Delete(_ID) {
+
+        //debugger;
+
+        if (_ID != undefined && _ID != '') {
+            bootbox.confirm({
+                size: 'small',
+                message: "Are you sure delete Consumer?",
+                buttons: {
+
+                    'cancel': {
+                        label: 'Cancel',
+                        className: 'btn-default'
+                    },
+                    'confirm': {
+                        label: 'Delete',
+                        className: 'btn-danger'
+                    }
+
+                },
+                callback: function (result) {
+                    if (result) {
+                        $.ajax({
+                            type: 'post',
+                            dataType: 'json',
+                            cache: false,
+                            url: '@Url.Action("delete", "user")',
+                            data: { inID: _ID },
+                            beforeSend: function () {
+                                $("#ajaxLoader").show();
+                            },
+                            success: function (response, textStatus, jqXHR) {
+                                if (response._result == true) {
+                                    toastr["success"](response._Message);
+                                    fillGrid();
+                                }
+                                else {
+                                    toastr["warning"](response._Message);
+                                }
+                                $("#ajaxLoader").hide();
+                            },
+                            error: function (jqXHR, textStatus, errorThrown) {
+
+                                //displayError(errorThrown);
+                                toastr["warning"](response._Message);
+                                $("#ajaxLoader").hide();
+                            }
+                        });
+                    }
+                }
+            })
+        }
+        else
+            toastr["warning"]('No Edit Discount Master.');
+    }
+
+    // open dialog window for registration of user and reset password
+    function OpenUserRegistration(_Id, _UserName, _UserRole) {
+        debugger;
+        $("#UserId").val(_Id);
+
+        if (_UserName != '' && _UserRole != '') {
+            $("#UserName").val(_UserName);
+            $("#RefRoleId").val(_UserRole);
+            $("#btnRegister").val("Reset");
+            $("#RegType").val("RESET");
+            $("#UserName").prop("readonly", true);
+        }
+        else {
+            $("#UserName").val("");
+            $("#btnRegister").val("Register");
+            $("#RegType").val("REGISTER");
+            $("#UserName").prop("readonly", false);
+        }
+        $("#divRegister").modal();
+    }
+
+    function updateActiveStatus(_ID, _currentStatus) {
+
+        if (_ID != undefined && _ID != '') {
+
+
+
+            //$("#dialogConfirmation").show();
+            //$("#dialogTitle")[0].innerHTML = "Confirmation";
+            //$("#dialogButtonYes")[0].innerHTML = "Yes";
+            //$("#dialogButtonNo")[0].innerHTML = "No";
+
+            //if (_currentStatus == "True")
+            //    $("#dialogMsg")[0].innerHTML = "Are you sure to In-Active data?";
+            //else
+            //    $("#dialogMsg")[0].innerHTML = "Are you sure to Active data?";
+
+            //$('.dialogButton').click(function () {
+
+            //    var _clickButton = $(this).val();
+
+            //    alert(_clickButton);
+
+            //    if (_clickButton == "Yes") {
+            $.ajax({
+                type: 'post',
+                dataType: 'json',
+                cache: false,
+                url: '@Url.Action("updateStatus_IsActive", "user")',
+                data: { inID: _ID, inCurrentStatus: _currentStatus },
+                beforeSend: function () {
+                    if (_currentStatus == 'True') {
+
+                        $("#row" + _ID).removeClass("fa-check").addClass("fa-remove");
+                        var clickData = $("#row" + _ID).attr("onclick");
+                        $("#row" + _ID).attr("onclick", clickData.replace("True", "False"));
+                    }
+                    else {
+                        $("#row" + _ID).removeClass("fa-remove").addClass("fa-check");
+                        var clickData = $("#row" + _ID).attr("onclick");
+                        $("#row" + _ID).attr("onclick", clickData.replace("False", "True"));
+                    }
+
+                    $("#ajaxLoader").show();
+                },
+                success: function (response, textStatus, jqXHR) {
+                    $("#ajaxLoader").hide();
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    toastr["error"](errorThrown);
+                    $("#ajaxLoader").hide();
+                }
+            });
+            //    }
+            //    else {
+            //        $("#dialogConfirmation").hide();
+            //    }
+            //});
+
+
+        }
+        else
+            toastr["warning"]('No Edit Discount Master.');
+    }
+
+    function updateAppStatus(_ID, _currentStatus) {
+
+        if (_ID != undefined && _ID != '') {
+
+
+
+            //$("#dialogConfirmation").show();
+            //$("#dialogTitle")[0].innerHTML = "Confirmation";
+            //$("#dialogButtonYes")[0].innerHTML = "Yes";
+            //$("#dialogButtonNo")[0].innerHTML = "No";
+
+            //if (_currentStatus == "True")
+            //    $("#dialogMsg")[0].innerHTML = "Are you sure to enable app access permission?";
+            //else
+            //    $("#dialogMsg")[0].innerHTML = "Are you sure to disable app access permission?";
+
+            //$('.dialogButton').click(function () {
+
+            //var _clickButton = $(this).val();
+
+            //alert(_clickButton);
+
+            //if (_clickButton == "Yes") {
+            $.ajax({
+                type: 'post',
+                dataType: 'json',
+                cache: false,
+                url: '@Url.Action("updateStatus_MobileAppAccess", "user")',
+                data: { inID: _ID, inCurrentStatus: _currentStatus },
+                beforeSend: function () {
+
+
+                    if (_currentStatus == 'True') {
+                        $("#row" + _ID).removeClass("fa-check").addClass("fa-remove");
+                        var clickData = $("#row" + _ID).attr("onclick");
+                        $("#row" + _ID).attr("onclick", clickData.replace("True", "False"));
+                    }
+                    else {
+                        $("#row" + _ID).removeClass("fa-remove").addClass("fa-check");
+                        var clickData = $("#row" + _ID).attr("onclick");
+                        $("#row" + _ID).attr("onclick", clickData.replace("False", "True"));
+                    }
+
+                    $("#ajaxLoader").show();
+                },
+                success: function (response, textStatus, jqXHR) {
+                    $("#ajaxLoader").hide();
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    toastr["error"](errorThrown);
+                    $("#ajaxLoader").hide();
+                }
+            });
+            //}
+            //else {
+            //    $("#dialogConfirmation").hide();
+            //}
+            //});
+
+
+        }
+        else
+            toastr["warning"]('No Edit Discount Master.');
+    }
+
+    function fillGrid() {
+
+        //
+
+
+        jQuery('#tblMaster').dataTable().fnDestroy();
+        var oTable = jQuery('#tblMaster').dataTable({
+            "bServerSide": true,
+            "sAjaxSource": '@Url.Action("AjaxHandler", "User")',
+            "bProcessing": false,
+            "responsive": true,
+            "sPaginationType": 'full_numbers',
+            "oLanguage": {
+                "sLengthMenu": "Show _MENU_ Rows",
+                "sSearch": " Search:",
+                "oPaginate": {
+                    "sPrevious": "",
+                    "sNext": ""
+                }
+            },
+            "aaSorting": [[1, 'asc']],
+            "aoColumns": [
+
+                          { "sName": "FullName" },
+                          { "sName": "UserType" },
+                          { "sName": "MobileNo" },
+                          { "sName": "EmailID" },
+                          { "sName": "UserName" },
+                          { "sName": "UserRole" },
+                          {
+                              "sName": "UserReg",
+                              "sClass": "text-center",
+                              "sWidth": "10px",
+                              "bSearchable": false,
+                              "bSortable": false,
+                              "mRender": function (data, type, oObj) {
+                                  return "<i id='row" + oObj[8] + "' class='ui-tooltip fa fa-user' style='font-size: 18px; color:gray; cursor:pointer;' onclick=\"OpenUserRegistration(" + oObj[8] + ",'" + oObj[4] + "'," + oObj[9] + " )\"></i>";
+                              }
+                          },
+
+                          {
+                              "sName": "AllowMobileRegistration",
+                              "sClass": "text-center",
+                              "sWidth": "10px",
+                              "bSearchable": false,
+                              "bSortable": true,
+                              "mRender": function (data, type, oObj) {
+                                  if (oObj[6] == 'True')
+                                      return "<i id='row" + oObj[8] + "' class='ui-tooltip fa fa-mobile' style='font-size: 18px; color:green; cursor:pointer;' onclick=\"updateAppStatus(" + oObj[8] + ",'" + oObj[6] + "')\"></i>";
+                                  else
+                                      return "<i id='row" + oObj[8] + "' class='ui-tooltip fa fa-mobile' style='font-size: 18px; color:gray; cursor:pointer;' onclick=\"updateAppStatus(" + oObj[8] + ",'" + oObj[6] + "')\"></i>";
+                              }
+                          },
+                          {
+                              "sName": "IsActive",
+                              "sClass": "text-center",
+                              "sWidth": "10px",
+                              "bSearchable": false,
+                              "bSortable": true,
+                              "mRender": function (data, type, oObj) {
+                                  if (oObj[7] == 'True')
+                                      return "<i id='row" + oObj[8] + "' class='ui-tooltip fa fa-check' style='font-size: 18px; cursor:pointer;' onclick=\"updateActiveStatus(" + oObj[8] + ",'" + oObj[7] + "')\"></i>";
+                                  else
+                                      return "<i id='row" + oObj[8] + "' class='ui-tooltip fa fa-remove' style='font-size: 18px; cursor:pointer;' onclick=\"updateActiveStatus(" + oObj[8] + ",'" + oObj[7] + "')\"></i>";
+                              }
+                          },
+                          {
+                              "sName": "ID",
+                              "sClass": "text-center",
+                              "sWidth": "10px",
+                              "bSearchable": false,
+                              "bSortable": false,
+                              "mRender": function (data, type, oObj) {
+
+                                  return "<i class='ui-tooltip fa fa-pencil' style='font-size: 18px; cursor:pointer;' onclick=\"editSession('" + oObj[8] + "','" + oObj[7] + "')\"></i>";
+                              }
+                          },
+                          {
+                              "sName": "ID",
+                              "sClass": "text-center",
+                              "sWidth": "10px",
+                              "bSearchable": false,
+                              "bSortable": false,
+                              "mRender": function (data, type, oObj) {
+                                  return "<i class='ui-tooltip fa fa-trash-o' style='font-size: 18px; cursor:pointer;' data-original-title='Delete' onclick=\"Delete('" + oObj[8] + "')\"></i>";
+                              }
+                          }
+            ]
+        })
+        //$('#tblMaster_wrapper .dataTables_filter input').addClass("form-control input-sm").attr("placeholder", "Search");
+        //// modify table search input
+        //$('#tblMaster_wrapper .dataTables_length select').addClass("m-wrap small");
+        // modify table per page dropdown
+        //$('#tblMaster_wrapper .dataTables_length select').select2();
+    }
+
+</script>

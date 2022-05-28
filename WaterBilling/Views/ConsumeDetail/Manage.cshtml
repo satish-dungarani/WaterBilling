@@ -1,0 +1,331 @@
+﻿@model WaterBilling.Models.ConsumeDetailModel
+
+@{
+    ViewBag.Title = "Consume Detail";
+}
+
+<div class="content-wrapper" style="min-height: 946px;">
+    <section class="content-header">
+        <h1>
+            Consume Detail
+            <small></small>
+        </h1>
+        <ol class="breadcrumb">
+            <li><a href="#"><i class="fa fa-dashboard"></i>Home</a></li>
+            <li><a href="#">Setup</a></li>
+            <li class="active">Manage</li>
+        </ol>
+    </section>
+    <section class="content">
+
+        <div class="row">
+            <div class="col-md-12">
+                <!-- Custom Tabs -->
+                <div class="nav-tabs-custom">
+
+                    @using (Ajax.BeginForm("Save", "ConsumeDetail", new AjaxOptions { HttpMethod = "POST", OnBegin = "ConsumeBegin", OnSuccess = "ConsumeSuccess", OnFailure = "ConsumeFail" }))
+                    {
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="box box-primary">
+
+                                    <div class="box-body">
+                                        @Html.HiddenFor(Model => Model.Id)
+                                        @*@Html.HiddenFor(Model => Model.RefMeterSizeId)
+                                            @Html.HiddenFor(Model => Model.RefMeterTypeId)
+                                            @Html.HiddenFor(Model => Model.RefSupplayTypeId)
+                                            @Html.HiddenFor(Model => Model.RefSupplayCategoryId)*@
+                                        @Html.HiddenFor(Model => Model.InsUser)
+                                        @Html.HiddenFor(Model => Model.InsDate)
+                                        @Html.HiddenFor(Model => Model.InsTerminal)
+                                        @Html.HiddenFor(Model => Model.UpdUser)
+                                        @Html.HiddenFor(Model => Model.UpdDate)
+                                        @Html.HiddenFor(Model => Model.UpdTerminal)
+
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <div class="box-header with-border">
+                                                    <h3 class="box-title text-blue text-bold">Basic Information</h3>
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-xs-6">
+                                                    <div class="form-group">
+                                                        <label>Reading Date</label>
+                                                        <div class="input-group">
+                                                            <div class="input-group-addon">
+                                                                <i class="fa fa-calendar"></i>
+                                                            </div>
+                                                            @Html.TextBoxFor(Model => Model.ReadingDate, "{0:dd/MM/yyyy}", new { @class = "form-control", @maxlength = 10, placeholder = "dd/MMM/yyyy" })
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-xs-6">
+                                                    <div class="form-group">
+                                                        <label>Reader Name</label>
+                                                        @Html.DropDownList("RefReaderId", new SelectList((IEnumerable<SelectListItem>)ViewData["fillReaderName"], "Value", "Text"), new { @class = "form-control", @style = "width: 100%;" })
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-xs-6">
+                                                    <div class="form-group">
+                                                        <label>Consumer No.</label>
+                                                        <div id="divConsumerList">
+                                                            @Html.Partial("RetriveConsumerNoPartial")
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-xs-6">
+                                                    <div class="form-group">
+                                                        <label>Meter Status</label>
+                                                        @Html.DropDownList("RefMeterStatusId", new SelectList((IEnumerable<SelectListItem>)ViewData["fillMeterStatus"], "Value", "Text"), new { @class = "form-control", @style = "width: 100%;" })
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-xs-6">
+                                                    <div class="form-group">
+                                                        <label>Meter Reading</label>
+
+                                                        @Html.TextBoxFor(Model => Model.MeterReading, new { @class = "form-control", @maxlength = 10 })
+
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <div id="divConsumerDetail">
+                                            @Html.Partial("ConsumerDetailPartial", new WaterBilling.Models.ConsumerMasterModel())
+                                        </div>
+                                    </div>
+
+                                    <div class="box-footer">
+                                        <input id="btnSubmit" type="submit" value="Save & Continue" class="btn btn-primary btnSubmit" onclick="return Validation();" /> &nbsp; &nbsp;
+                                        <input id="btnCancle" type="button" value="Cancle" class="btn btn-primary" onclick="CancleFunction();" /> &nbsp; &nbsp;
+                                    </div>
+
+
+                                </div>
+                            </div>
+                        </div>
+
+
+                    }
+                </div>
+            </div><!-- /.col -->
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="box box-primary">
+
+                    <div class="box-body">
+                        <div id="divConsumeDetailList">
+                            @Html.Partial("ConsumeDetailListPartial")
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </section>
+</div>
+
+<script type="text/javascript">
+    jQuery(document).ready(function () {
+        debugger;
+
+        if ($("#RefConsumerId").val() != "")
+            RetriveConsumerDetail();
+
+        $("#RefReaderId").select();
+        debugger;
+        SetDatePicker("ReadingDate", true);
+
+        $("#RefReaderId").change(function () {
+            debugger;
+            RetriveConsumer();
+            fillGrid($("#RefReaderId").val(), $("#ReadingDate").val());
+        });
+
+        $("#ReadingDate").change(function () {
+            debugger;
+            RetriveConsumer();
+            fillGrid($("#RefReaderId").val(), $("#ReadingDate").val());
+        });
+
+        //$("#RefMeterStatusId").change(function () {
+        //    var _Value = $("#RefMeterStatusId").text();
+
+        //});
+
+
+    });
+
+    //function for DateRange Picker
+    function SetDatePicker(_ControlName, _ClearBtn) {
+        debugger;
+
+        $('input[name="' + _ControlName + '"]').datepicker({
+            showOnFocus: true,
+            format: 'dd/M/yyyy',
+            todayHighlight: true,
+            autoclose: true,
+            todayBtn: true,
+            clearBtn: _ClearBtn,
+
+
+            //defaultViewDate: { year: 2015, month: 01, day: 01 }
+        });
+        SetDefaultValue(_ControlName);
+    }
+
+    function SetDefaultValue(_ControlName) {
+        var _val = $("#" + _ControlName).val()
+        $('input[name="' + _ControlName + '"]').datepicker("setDate", Date())
+        if (_val == '' || _val == '01-01-0001') {
+            _val = ''
+        }
+        $('input[name="' + _ControlName + '"]').datepicker("setDate", _val)
+    }
+
+    function CancleFunction() {
+        debugger;
+        $("#MeterReading").val(0);
+        $("#Id").val(0);
+        //$("#RefConsumerId").val("");
+        $("#RefConsumerId").val("").trigger("change");
+        RetriveConsumerDetail();
+    }
+
+    function Validation() {
+
+        //debugger;
+
+        var _ReaderId = $("#RefReaderId").val();
+        var _ConsumerNo = $("#RefConsumerId").val();
+        var _MeterStatusId = $("#RefMeterStatusId").val();
+        var _ReadingDate = $("#ReadingDate").val();
+
+        // To validate user Reading Date
+        if ($("#ReadingDate").val() == '' || $("#ReadingDate").val() == undefined) {
+            $("#ReadingDate").focus();
+            toastr["warning"]('Reading Date can not left blank!');
+            return false;
+        }
+
+        // To validate Reader Name
+        if ($("#RefReaderId").val() == '' || $("#RefReaderId").val() == undefined) {
+            $("#RefReaderId").focus();
+            toastr["warning"]('Reader Name can not left blank!');
+            return false;
+        }
+
+        // To validate user Consumer Number
+        if ($("#RefConsumerId").val() == '' || $("#RefConsumerId").val() == undefined) {
+            $("#RefConsumerId").focus();
+            toastr["warning"]('Consumer Number can not left blank!');
+            return false;
+        }
+
+        // To validate Meter Status
+        if ($("#RefMeterStatusId").val() == '' || $("#RefMeterStatusId").val() == undefined) {
+            $("#RefMeterStatusId").focus();
+            toastr["warning"]('Meter Status can not left blank!');
+            return false;
+        }
+
+
+
+        return true;
+    }
+
+    function RetriveConsumer() {
+        var _SelectedReaderId = $("#RefReaderId").val()
+        //debugger;
+        $.ajax({
+            type: 'get',
+            datatype: 'html',
+            url: '@Url.Action("RetriveConsumerNoPartial", "ConsumeDetail")',
+            data: { pReaderId: _SelectedReaderId },
+            beforesend: function () {
+                //debugger;
+                $("#ajaxLoader").show();
+            },
+            success: function (response) {
+                debugger;
+                $("#ajaxLoader").hide();
+                $("#divConsumerList").html('');
+                $("#divConsumerList").html(response);
+            },
+            error: function (jxex) {
+                //debugger;
+                $("#ajaxloader").hide();
+                toastr["error"](jxex);
+            }
+
+        });
+    }
+
+    function RetriveConsumerDetail() {
+        var _ConsumerId = $("#RefConsumerId").val()
+        if (_ConsumerId != "") {
+            debugger;
+            $.ajax({
+                type: 'get',
+                datatype: 'html',
+                url: '@Url.Action("ConsumerDetailPartial", "ConsumeDetail")',
+                data: { pId: _ConsumerId },
+                beforesend: function () {
+                    //debugger;
+                    $("#ajaxLoader").show();
+                },
+                success: function (response) {
+                    debugger;
+                    $("#ajaxLoader").hide();
+                    $("#divConsumerDetail").html('');
+                    $("#divConsumerDetail").html(response);
+                },
+                error: function (jxex) {
+                    //debugger;
+                    $("#ajaxloader").hide();
+                    toastr["error"](jxex);
+                }
+
+            });
+        }
+        else {
+            $("#divConsumerDetail").html('');
+        }
+    }
+
+    function ConsumeBegin() {
+        $("#RefMeterStatusId").text();
+    }
+
+    function ConsumeSuccess(response) {
+        debugger;
+        $("#divConsumeDetailList").html('');
+        $("#divConsumeDetailList").html(response);
+        $("#Id").val(0);
+        //$("#RefConsumerId").val("");
+        $("#RefConsumerId").val("").trigger("change");
+        $("#RefConsumerId").focus();
+    }
+
+    function ConsumeFail() {
+        debugger;
+    }
+
+</script>

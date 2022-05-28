@@ -1,0 +1,293 @@
+﻿@model WaterBilling.Models.ConsumeDetailModel
+
+@{
+    Layout = "";
+}
+
+<div class="col-md-12">
+    <div class="form-group">
+        <div class="box-header with-border">
+            <h3 class="box-title text-blue text-bold">Consume Details</h3>
+        </div>
+    </div>
+    <div class="box-body">
+        <div class="row">
+            <table class="table table-bordered table-hover" id="tblMaster">
+                <thead>
+                    <tr>
+                        <th>Consumer No.</th>
+                        <th>Meter No.</th>
+                        <th>Meter Status</th>
+                        <th>Reading Date</th>
+                        <th>Meter reading</th>
+                        <th></th>
+                        <th></th>
+                        @*<th></th>*@
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+    jQuery(document).ready(function () {
+        //debugger;
+
+        if ('@TempData["Success"]' != '') {
+            toastr["success"]('@TempData["Success"]');
+            $("#MeterReading").val(0);
+            $("#Id").val(0);
+            $("#RefConsumerId").val('');
+        }
+        else if ('@TempData["Warning"]' != '') {
+            toastr["warning"]('@TempData["Warning"]');
+        }
+
+        debugger;
+        fillGrid($("#RefReaderId").val(), $("#ReadingDate").val());
+    });
+
+    function editSession(_ID) {
+        debugger;
+        var _Result = null;
+        if ($("#Id").val() > 0) {
+            bootbox.confirm({
+                size: 'small',
+                message: "Are you sure to cancle edit mode?",
+                buttons: {
+
+                    'cancel': {
+                        label: 'No',
+                        className: 'btn-danger'
+                    },
+                    'confirm': {
+                        label: 'Yes',
+                        className: 'btn-default'
+                    }
+
+                },
+                callback: function (result) {
+                    if (result) {
+                        debugger;
+                        ManageRecord(_ID, result);
+                    }
+                }
+            });
+        }
+        else {
+            ManageRecord(_ID, true);
+        }
+
+
+    }
+
+    function ManageRecord(_ID, _Result) {
+        debugger;
+        if (_ID != undefined && _ID != '' && _Result) {
+            $.ajax({
+                type: 'post',
+                dataType: 'json',
+                cache: false,
+                url: '@Url.Action("editSession", "ConsumeDetail")',
+                data: { pID: _ID },
+                beforeSend: function () {
+                    debugger;
+                    $("#ajaxLoader").show();
+                },
+                success: function (response, textStatus, jqXHR) {
+                    debugger;
+                    if (response.Saved == "Yes") {
+                        window.location.href = '@Url.Action("Manage", "ConsumeDetail")';
+                        
+                    }
+                    else if (response.Saved == "No") {
+                        toastr["warning"](response._Message);
+                    }
+                    $("#ajaxLoader").hide();
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+
+                    toastr["error"](errorThrown);
+                    $("#ajaxLoader").hide();
+                }
+            });
+        }
+        //else
+        //    toastr["error"]('No such record found!');
+    }
+
+
+
+    function Delete(_ID) {
+
+
+
+        if (_ID != undefined && _ID != '') {
+            bootbox.confirm({
+                size: 'small',
+                message: "Are you sure delete Consume Detail?",
+                buttons: {
+
+                    'cancel': {
+                        label: 'Cancel',
+                        className: 'btn-default'
+                    },
+                    'confirm': {
+                        label: 'Delete',
+                        className: 'btn-danger'
+                    }
+
+                },
+                callback: function (result) {
+                    if (result) {
+
+                        $.ajax({
+                            type: 'post',
+                            dataType: 'json',
+                            cache: false,
+                            url: '@Url.Action("Delete", "ConsumeDetail")',
+                            data: { inID: _ID },
+                            beforeSend: function () {
+                                $("#ajaxLoader").show();
+                            },
+                            success: function (response, textStatus, jqXHR) {
+
+                                //displaySuccess('');
+                                if (response._result == true) {
+                                    toastr["success"](response._Message);
+                                }
+                                else {
+                                    toastr["warning"](response._Message);
+                                }
+                                fillGrid($("#RefReaderId").val(), $("#ReadingDate").val());
+                                $("#ajaxLoader").hide();
+
+                            },
+                            error: function (jqXHR, textStatus, errorThrown) {
+                                $("#ajaxLoader").hide();
+                                //displayError(errorThrown);
+                                toastr["error"](response._Message);
+
+                            }
+                        });
+                    }
+                }
+            })
+        }
+        else
+            toastr["error"]('No Edit Consumer Meter.');
+    }
+
+    function fillGrid(_Id, _Date) {
+
+        debugger;
+        jQuery('#tblMaster').dataTable().fnDestroy();
+        var oTable = jQuery('#tblMaster').dataTable({
+            "bServerSide": true,
+            "sAjaxSource": '@Url.Action("AjaxHandler", "ConsumeDetail")',
+            "fnServerData": function (sSource, aoData, fnCallback) {
+                debugger;
+                aoData.push({ "name": "pReaderId", "value": _Id });
+                aoData.push({ "name": "pReadingDate", "value": _Date });
+                $.ajax({
+                    "dataType": 'json',
+                    "type": "POST",
+                    "url": sSource,
+                    "data": aoData,
+                    "success": fnCallback
+                })
+            },
+            "bProcessing": false,
+            "responsive": true,
+            "sPaginationType": 'full_numbers',
+
+            "oLanguage": {
+                "sLengthMenu": "Show _MENU_ Rows",
+                "sSearch": "",
+                "oPaginate": {
+                    "sPrevious": "",
+                    "sNext": ""
+                }
+            },
+            "aaSorting": [[0, 'asc']],
+            "aoColumns": [
+
+                          { "sName": "ConsumerNo" },
+                          { "sName": "MeterNo" },
+                          { "sName": "MeterStatus" },
+                          { "sName": "ReadingDate" },
+                          { "sName": "MeterReading" },
+                          {
+                              "sName": "Id",
+                              "sClass": "text-center",
+                              "sWidth": "10px",
+                              "bSearchable": false,
+                              "bSortable": false,
+                              "mRender": function (data, type, oObj) {
+                                  return "<i class='ui-tooltip fa fa-pencil' style='font-size: 18px; cursor:pointer;' onclick=\"editSession('" + oObj[5] + "')\"></i>";
+                              }
+                          },
+                          {
+                              "sName": "Id",
+                              "sClass": "text-center",
+                              "sWidth": "10px",
+                              "bSearchable": false,
+                              "bSortable": false,
+                              "mRender": function (data, type, oObj) {
+                                  //
+                                  return "<i class='ui-tooltip fa fa-trash-o' style='font-size: 18px; cursor:pointer;' data-original-title='Delete' onclick=\"Delete('" + oObj[5] + "')\"></i>";
+                              }
+                          }
+                          //{
+                          //    "sName": "Id",
+                          //    "sClass": "text-center",
+                          //    "sWidth": "10px",
+                          //    "bSearchable": false,
+                          //    "bSortable": false,
+                          //    "mRender": function (data, type, oObj) {
+                          //        return "<i class='ui-tooltip fa fa-print' style='font-size: 18px; cursor:pointer;' onclick=\"CallGenerateBill('" + oObj[0] + "','" + moment().format('DD-MMM-YYYY') + "','" + oObj[4] + "','" + oObj[6] + "','" + oObj[6] + "','" + oObj[5] + "','"+ oObj[3] +"')\"></i>";
+                                  
+                          //    }
+                          //}
+                  
+            ]
+        })
+
+        //$('#tblMaster_wrapper .dataTables_filter input').addClass("form-control input-sm").attr("placeholder", "Search");
+        //// modify table search input
+        //$('#tblMaster_wrapper .dataTables_length select').addClass("m-wrap small");
+        // modify table per page dropdown
+        //$('#tblMaster_wrapper .dataTables_length select').select2();
+    }
+
+    //temapary function create for testing Generate Bill Method
+    //Start
+    @*function CallGenerateBill(_ConsumerNo, _IssueDate, _Reading, _StatusId, _PrevStatusId, _Id, _ReadingDate) {
+        debugger;
+        //_IssueDate = moment().format('DD-MMM-YYYY');
+        $.ajax({
+            type: 'post',
+            dataType: 'json',
+            cache: false,
+            url: '@Url.Action("GentBill", "ConsumeDetail")',
+            data: { _ConsumerNo: _ConsumerNo, _IssueDate: _IssueDate, _Reading: _Reading, _StatusId: _StatusId, _PrevStatusId: _PrevStatusId, _Id: _Id, _ReadingDate: _ReadingDate },
+            beforeSend: function () {
+                
+            },
+            success: function (result) {
+                if (result.Result = "true")
+                    toastr["success"](result._Message);
+                else
+                    toastr["warning"](result._Message);
+            },
+            error: function (a, b, c) {
+                debugger;
+                
+            }
+        });
+    }*@
+    //End
+</script>

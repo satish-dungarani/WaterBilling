@@ -1,0 +1,287 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{90FABE6B-B070-44D6-84A1-347FAEC1D88A}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>WaterBillingDB</RootNamespace>
+    <AssemblyName>WaterBillingDB</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\EntityFramework.6.0.0\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer">
+      <HintPath>..\packages\EntityFramework.6.0.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.Core">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.2.1\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.EntityFramework">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.EntityFramework.2.2.1\lib\net45\Microsoft.AspNet.Identity.EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.Owin">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.Owin.2.2.1\lib\net45\Microsoft.AspNet.Identity.Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin">
+      <HintPath>..\packages\Microsoft.Owin.2.1.0\lib\net45\Microsoft.Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security">
+      <HintPath>..\packages\Microsoft.Owin.Security.2.1.0\lib\net45\Microsoft.Owin.Security.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.Cookies">
+      <HintPath>..\packages\Microsoft.Owin.Security.Cookies.2.1.0\lib\net45\Microsoft.Owin.Security.Cookies.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.OAuth">
+      <HintPath>..\packages\Microsoft.Owin.Security.OAuth.2.1.0\lib\net45\Microsoft.Owin.Security.OAuth.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.4.5.11\lib\net40\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Owin">
+      <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="BoardRentMaster.cs">
+      <DependentUpon>WaterBillingData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ChqBounceChargiesMaster.cs">
+      <DependentUpon>WaterBillingData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ConsumeDetail.cs">
+      <DependentUpon>WaterBillingData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ConsumeRateMaster.cs">
+      <DependentUpon>WaterBillingData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ConsumerMaster.cs">
+      <DependentUpon>WaterBillingData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ConsumerMeterMaster.cs">
+      <DependentUpon>WaterBillingData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DrCrNote.cs">
+      <DependentUpon>WaterBillingData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EffDate.cs">
+      <DependentUpon>WaterBillingData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MastersList.cs">
+      <DependentUpon>WaterBillingData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MasterValue.cs">
+      <DependentUpon>WaterBillingData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MenuMaster.cs">
+      <DependentUpon>WaterBillingData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MeterMinChargeMaster.cs">
+      <DependentUpon>WaterBillingData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="OtherChargies.cs">
+      <DependentUpon>WaterBillingData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ReasonMaster.cs">
+      <DependentUpon>WaterBillingData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ReceiptDetail.cs">
+      <DependentUpon>WaterBillingData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="sp_BG_GetBillDetail_Result.cs">
+      <DependentUpon>WaterBillingData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="sp_BG_GetConsumerDetailForGenerateBill_Result.cs">
+      <DependentUpon>WaterBillingData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="sp_BG_SelectConsumerMeterDetail_Result.cs">
+      <DependentUpon>WaterBillingData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="sp_BoardRentMaster_SelectWhere_Result.cs">
+      <DependentUpon>WaterBillingData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="sp_BoardRentMaster_Select_Result.cs">
+      <DependentUpon>WaterBillingData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="sp_ChqBounceChargiesMaster_Select_Result.cs">
+      <DependentUpon>WaterBillingData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="sp_ChqBounceChargiesMaster_SetupNewChargies_Result.cs">
+      <DependentUpon>WaterBillingData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="sp_ConsumeDetail_SelectWhere_Result.cs">
+      <DependentUpon>WaterBillingData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="sp_ConsumeDetail_Select_Result.cs">
+      <DependentUpon>WaterBillingData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="sp_ConsumeRateMaster_SelectWhere_Result.cs">
+      <DependentUpon>WaterBillingData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="sp_ConsumeRateMaster_SetupNewRate_Result.cs">
+      <DependentUpon>WaterBillingData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="sp_ConsumerList_Select_Result.cs">
+      <DependentUpon>WaterBillingData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="sp_ConsumerMaster_SelectWhere_Result.cs">
+      <DependentUpon>WaterBillingData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="sp_ConsumerMaster_Select_Result.cs">
+      <DependentUpon>WaterBillingData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="sp_ConsumerMeterMaster_SelectWhere_Result.cs">
+      <DependentUpon>WaterBillingData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="sp_ConsumerMeterMaster_Select_Result.cs">
+      <DependentUpon>WaterBillingData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="sp_ConsumerRateMaster_Select_Result.cs">
+      <DependentUpon>WaterBillingData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="sp_DrCrNote_SelectWhere_Result.cs">
+      <DependentUpon>WaterBillingData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="sp_DrCrNote_Select_Result.cs">
+      <DependentUpon>WaterBillingData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="sp_MasterList_Select_Result.cs">
+      <DependentUpon>WaterBillingData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="sp_MasterValue_SelectWhere_Result.cs">
+      <DependentUpon>WaterBillingData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="sp_MasterValue_Select_Result.cs">
+      <DependentUpon>WaterBillingData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="sp_MenuRoleRights_Select_Result.cs">
+      <DependentUpon>WaterBillingData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="sp_MeterMinChargeMaster_SelectWhere_Result.cs">
+      <DependentUpon>WaterBillingData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="sp_MeterMinChargeMaster_Select_Result.cs">
+      <DependentUpon>WaterBillingData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="sp_MeterMinChargeMaster_SetupNewRate_Result.cs">
+      <DependentUpon>WaterBillingData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="sp_ReasonMaster_SelectWhere_Result.cs">
+      <DependentUpon>WaterBillingData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="sp_ReasonMaster_Select_Result.cs">
+      <DependentUpon>WaterBillingData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="sp_ReceiptDetail_SelectWhere_Result.cs">
+      <DependentUpon>WaterBillingData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="sp_ReceiptDetail_Select_Result.cs">
+      <DependentUpon>WaterBillingData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="sp_RetrieveMenuRightsWise_Select_Result.cs">
+      <DependentUpon>WaterBillingData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="sp_UserMaster_Save_Result.cs">
+      <DependentUpon>WaterBillingData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="sp_UserMaster_SelectWhere_Result.cs">
+      <DependentUpon>WaterBillingData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="sp_UserMaster_Select_Result.cs">
+      <DependentUpon>WaterBillingData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="UserCollCentRights.cs">
+      <DependentUpon>WaterBillingData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="UserMaster.cs">
+      <DependentUpon>WaterBillingData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="WaterBillingData.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>WaterBillingData.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="WaterBillingData.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>WaterBillingData.tt</DependentUpon>
+    </Compile>
+    <Compile Include="WaterBillingData.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>WaterBillingData.edmx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.Config">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="packages.config" />
+    <EntityDeploy Include="WaterBillingData.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>WaterBillingData.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <None Include="WaterBillingData.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>WaterBillingData.edmx</DependentUpon>
+      <LastGenOutput>WaterBillingData.Context.cs</LastGenOutput>
+    </None>
+    <None Include="WaterBillingData.edmx.diagram">
+      <DependentUpon>WaterBillingData.edmx</DependentUpon>
+    </None>
+    <None Include="WaterBillingData.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>WaterBillingData.edmx</DependentUpon>
+      <LastGenOutput>WaterBillingData.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
